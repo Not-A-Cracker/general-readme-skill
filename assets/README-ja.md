@@ -1,3 +1,5 @@
+> **1.x の旧ガイドです。2.0 の手順は [English](../README.md) または [中文](README-zh.md) を参照してください。以下の旧フローを現行の実行ルールとして扱わないでください。**
+
 <h1 align="center">General README Skill</h1>
 <p align="center">
   <strong>AI コーディングアシスタントを使用して、任意のプロジェクトのプロフェッショナルな README を生成</strong>
@@ -7,7 +9,7 @@
 
 <p align="center">
   <a href="#クイックスタート"><img src="https://img.shields.io/badge/クイックスタート-4CAF50?style=for-the-badge" alt="Quick Start" /></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/ライセンス-MIT-yellow?style=for-the-badge" alt="License: MIT" /></a>
+  <a href="../LICENSE"><img src="https://img.shields.io/badge/ライセンス-MIT-yellow?style=for-the-badge" alt="License: MIT" /></a>
 </p>
 
 <p align="center">

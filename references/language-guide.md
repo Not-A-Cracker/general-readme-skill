@@ -1,97 +1,50 @@
 # Language Guide
 
-Multi-language README support. English is the default primary language.
+Use the language preferences confirmed through the entry gate. Never apply English automatically or ask again after generation. Treat requested translations as a coordinated set of documents.
 
----
+## Naming and placement
 
-## File Naming
+Write the primary language to `README.md`, regardless of which language it is. Write requested secondary languages to `README-{code}.md` using ISO 639-1 / BCP 47 codes, for example `README-en.md`, `README-zh.md`, `README-zh-TW.md`, `README-ja.md`, `README-ko.md`, `README-fr.md`, `README-es.md`, `README-pt-BR.md`.
 
-Use ISO 639-1 codes. BCP 47 for regional variants.
+Keep existing translation paths and spelling when updating a repository. Do not move nested translations or rename `pt-br` solely to normalize casing. Deduplicate languages and omit the primary from the secondary list. Generate only requested languages; do not delete existing unrequested translations.
 
-| Language | File | Code |
-|---|---|---|
-| English (primary) | `README.md` | — |
-| Chinese (Simplified) | `README-zh.md` | zh |
-| Chinese (Traditional) | `README-zh-TW.md` | zh-TW |
-| Japanese | `README-ja.md` | ja |
-| Korean | `README-ko.md` | ko |
-| French | `README-fr.md` | fr |
-| German | `README-de.md` | de |
-| Spanish | `README-es.md` | es |
-| Portuguese (Brazil) | `README-pt-br.md` | pt-br |
-| Russian | `README-ru.md` | ru |
-| Arabic | `README-ar.md` | ar |
+## Switcher
 
----
+Omit the switcher for a single-language document unless other existing translations need navigation. Mark the current language as plain text. List the primary first, followed by requested/existing languages in a consistent order. Link only files that exist or will be created in the agreed output.
 
-## Language Switcher
-
-Every README starts with a language switcher. Choose the style based on tone profile:
-
-### Default (Energetic / Professional)
-
-Right-aligned at the top:
+Use plain Markdown for compact, balanced, or portable output:
 
 ```markdown
-<div align="right">
-
-[English](README.md) · [中文](README-zh.md) · [日本語](README-ja.md)
-
-</div>
+English · [中文](README-zh.md)
 ```
 
-### Minimal
+For showcase on GitHub, optionally use simple HTML:
 
-Plain links with separator:
+```html
+<p align="center">English · <a href="README-zh.md">中文</a></p>
+```
+
+For nested Chinese translations linking to a root English README, calculate paths from the translation directory:
 
 ```markdown
-[English](README.md) | [中文](README-zh.md) | [日本語](README-ja.md)
+[English](../README.md) · 中文
 
----
+[MIT](../LICENSE)
 ```
 
-### Rules
+Do not reuse root-relative image/license URLs blindly. Use the current file's parent as the base for images, docs, source paths and translations.
 
-- The current language is **not linked** (it's plain text, not a link).
-- Languages are listed in the order they were created.
-- The separator is ` · ` (middle dot with spaces) for the default style, ` | ` (pipe with spaces) for minimal.
+## Translation rules
 
----
+- Keep equivalent facts, section order, code examples and managed-region IDs across translated generated sections. Do not reorder or translate preserved manual content without permission.
+- Translate headings and prose naturally; do not translate commands, imports, filenames, options, variables, route paths or executable string literals.
+- Keep community-standard technical terms where appropriate. Translate descriptive alt text when useful.
+- Recalculate local heading fragments after translation. `#quick-start` does not target `## 快速开始`; use its actual fragment or a supported explicit anchor in GitHub-only layouts.
+- For portable mode, prefer normal Markdown headings and generated fragment links over explicit HTML anchors.
+- Validate each file separately and compare managed-section ID sets across the generated translation set.
+- Avoid claiming translation quality was reviewed by native speakers unless it actually was.
 
-## Generation Flow
-
-1. Ask the developer for primary language (default: English)
-2. Ask for secondary languages (default: none)
-3. Generate primary `README.md` first
-4. For each secondary language, generate `README-{lang}.md`
-5. Add language switcher to all files
-
----
-
-## Suggested Language Sets
-
-| Use Case | Primary | Secondaries |
-|---|---|---|
-| Global open source | English | — |
-| Chinese community | English | Chinese |
-| Japanese community | English | Japanese |
-| East Asian | English | Chinese, Japanese, Korean |
-| Full international | English | Chinese, Japanese, Korean, Spanish, French |
-
----
-
-## Translation Rules
-
-1. **Structure mirrors exactly.** Same sections, same order, same headings.
-2. **Natural translation.** Not word-for-word. Each language should read naturally to native speakers.
-3. **Code blocks never translate.** Commands, variable names, file paths, API endpoints stay in English.
-4. **Technical terms stay English** where the community uses the English term (e.g., "API", "REST", "Docker", "npm"). Translate only terms that have established native equivalents.
-5. **Headings translate.** "Features" → "功能" (Chinese) → "機能" (Japanese).
-6. **Badge alt text stays English.** Badge images are visual — alt text doesn't need translation.
-
----
-
-## Common Heading Translations
+## Common headings
 
 | English | Chinese | Japanese | Korean | Spanish |
 |---|---|---|---|---|

@@ -1,6 +1,6 @@
 # Tone Profiles
 
-Choose one profile at generation time. Every piece of generated text follows the chosen profile's rules.
+Apply the profile confirmed through the preference gate. Keep voice independent of layout. Treat all example claims below as style illustrations, not evidence about a target project. Never copy numerical performance/security claims without verification. Use emoji only when explicitly requested; otherwise omit emoji prefixes, including in Energetic tone.
 
 ---
 

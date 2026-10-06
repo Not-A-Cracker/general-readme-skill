@@ -130,7 +130,7 @@ graph LR
 
 ### Authentication
 
-All API endpoints require a Bearer token. Obtain one via `POST /api/auth/login`.
+Protected endpoints require a Bearer token. Registration and login are public, as listed below. Obtain a token via `POST /api/auth/login`.
 
 ### Endpoints
 

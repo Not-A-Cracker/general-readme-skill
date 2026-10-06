@@ -17,8 +17,11 @@ cp SKILL.md .github/copilot-instructions.md
 3. Copy reference files:
 
 ```bash
-cp -r references/ .github/copilot-instructions/references/
+mkdir -p .github/copilot-instructions
+cp -r references/ scripts/ .github/copilot-instructions/
 ```
+
+Resolve companion resources relative to `.github/copilot-instructions/`, not the workspace root. Installing only the single instructions file is insufficient. Merge into existing instructions rather than overwriting project/team conventions.
 
 ## Usage
 

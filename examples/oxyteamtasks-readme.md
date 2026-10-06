@@ -82,10 +82,10 @@ sudo apt install libboost-all-dev libprotobuf-dev protobuf-compiler \
   libgrpc++-dev protobuf-compiler-grpc libhiredis-dev libmysqlcppconn-dev
 
 # Frontend dependencies
-cd Client && npm install
+(cd Client && npm install)
 
 # MailerServer dependencies
-cd MailerServer && npm install
+(cd MailerServer && npm install)
 ```
 
 ### Configure

@@ -1,3 +1,5 @@
+> **Это прежнее руководство 1.x. Инструкции для 2.0 доступны в [English](../README.md) и [中文](README-zh.md). Не используйте описанный ниже старый процесс как текущие правила выполнения.**
+
 <h1 align="center">General README Skill</h1>
 <p align="center">
   <strong>Генерация профессиональных README файлов для любого проекта с помощью AI-ассистентов</strong>
@@ -7,7 +9,7 @@
 
 <p align="center">
   <a href="#быстрый-старт"><img src="https://img.shields.io/badge/Быстрый_старт-4CAF50?style=for-the-badge" alt="Quick Start" /></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/Лицензия-MIT-yellow?style=for-the-badge" alt="License: MIT" /></a>
+  <a href="../LICENSE"><img src="https://img.shields.io/badge/Лицензия-MIT-yellow?style=for-the-badge" alt="License: MIT" /></a>
 </p>
 
 <p align="center">

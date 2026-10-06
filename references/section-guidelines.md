@@ -1,442 +1,77 @@
 # Section Guidelines
 
-How to write each README section. These rules apply regardless of tone profile — the profile controls *voice*, these rules control *structure*.
+Use sections as a reader journey, not a mandatory checklist. Apply the confirmed audience, depth, layout, and update scope from `SKILL.md`. Use `beautification-rules.md` for visual patterns; do not duplicate Hero templates here.
 
----
+## Global writing rules
 
-## General Rules (All Sections)
+- State what the project does, who it is for, and how to get a first result.
+- Prefer specific, source-backed facts. Use performance numbers only with reproducible benchmark evidence.
+- Avoid filler: "powerful", "robust", "versatile", "leverages", "seamlessly", "cutting-edge", "state-of-the-art", "game-changing", "revolutionary", "next-generation", "best-in-class", "enterprise-grade".
+- Omit unsupported/empty sections. Do not fill with N/A, Coming soon, generic architecture, or assumed contribution policies.
+- Keep prose natural and concise. Minimal tone needs no introductory sentence in every section.
+- Use no emoji unless explicitly requested. Treat all sample content as a format example, not project facts.
+- Preserve manual content and use paired managed-region markers for new generated sections.
 
-1. **No filler phrases.** Banned across all profiles: "powerful", "robust", "versatile", "leverages", "seamlessly", "cutting-edge", "comprehensive", "state-of-the-art", "ever-evolving landscape", "game-changing", "revolutionary", "next-generation", "best-in-class", "enterprise-grade"
-2. **Vary sentence length.** Mix one-liners with two-sentence explanations. No uniform paragraph density.
-3. **Be specific.** "Handles 10k req/sec" beats "high performance". "Uses JWT with RS256" beats "secure authentication".
-4. **Only include sections with real data.** If the project has no API, skip the API section entirely. Don't write "N/A" or "Coming soon".
-5. **Section intros are optional.** Check the tone profile — Minimal never uses them, Professional uses one sentence, Energetic uses one sentence max.
+## Project routing
 
----
+| Type | Prioritize | Add only when useful |
+|---|---|---|
+| Application / static site | Real demo/screenshot, prerequisites, coherent local startup, first UI action | Configuration, deployment, source-backed architecture |
+| Library | Verified installation/distribution, import + minimal example + result | Public exports, compatibility, advanced use |
+| CLI | Installation, executable name, one real invocation, documented output | Options table, troubleshooting, shell compatibility |
+| Monorepo | Package map, required services, root/package working directories | Separate package links instead of exhaustive APIs |
+| Agent skill / plugin | Installation scope, actual entry point/invocation, expected interaction | Integration adapters and host limitations |
+| Docs-only | Purpose, entry pages, navigation, how to use/contribute | No invented runtime or diagram |
 
-## Hero (Title + Description + Badges)
+Order Hero → first result → capabilities/usage → reference → maintainer links by default. Move capabilities before first result when readers need context. Keep quick-start early; never move manual sections just to impose this order.
 
-**Structure (HTML Centered Layout — Recommended):**
-```html
-<h1 align="center">Project Name</h1>
-<p align="center">
-  <strong>One-line description of what the project does</strong>
-  <br />
-  <em>Keywords · Features · Platform support</em>
-</p>
+## Hero
 
-<p align="center">
-  <a href="#quick-start"><img src="https://img.shields.io/badge/Quick_Start-4CAF50?style=for-the-badge" alt="Quick Start" /></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" alt="License" /></a>
-</p>
+Use one H1 with the actual name from manifest or verified existing documentation. Describe the outcome in one sentence; avoid a list of technology keywords as the main description. Use optional navigation to existing sections. Badge/image/HTML choices must match confirmed layout. Do not imply the project supports the assistant used to generate the README.
 
-<p align="center">
-  <a href="https://docs.anthropic.com/en/docs/claude-code"><img src="https://img.shields.io/badge/Claude_Code-D97757?style=flat&logo=claude&logoColor=white" alt="Claude Code" /></a>
-  <a href="https://github.com/features/copilot"><img src="https://img.shields.io/badge/GitHub_Copilot-000000?style=flat&logo=github&logoColor=white" alt="GitHub Copilot" /></a>
-  <a href="https://cursor.sh"><img src="https://img.shields.io/badge/Cursor-000000?style=flat&logo=cursor&logoColor=white" alt="Cursor" /></a>
-</p>
+## Capabilities / Why
 
-<p align="center">
-  <a href="README.md">English</a> · <a href="README-zh.md">中文</a> · <a href="README-ja.md">日本語</a>
-</p>
-```
+Select 2–6 real differentiators, or fewer if justified. Explain the benefit, not just a dependency name. Use a list for short descriptions; use a table only for genuine comparison. Omit if the introduction and minimal usage already explain the value. Do not convert test coverage, speed or security aspirations into factual claims.
 
-**Structure (Markdown Legacy — For Reference):**
-```markdown
-<div align="right">
+## Quick Start / First Result
 
-[English](README.md) · [中文](README-zh.md)
+Document the complete smallest supported path:
 
-</div>
+1. Verified prerequisites and starting directory.
+2. Installation/build using the declared package manager and actual distribution method.
+3. Required configuration and services, if any.
+4. Start/invoke/import and an evidence-backed observable result.
 
-# Project Name
-
-> One-line description of what the project does
-
-![badge1](url)
-![badge2](url)
-```
-
-**Rules:**
-- Title: Use `<h1 align="center">` for HTML layout. Project name from `package.json`/`name`, `pyproject.toml`/`name`, directory name, or existing README. No prefix ("My Project" not "Project: My Project").
-- Description: Use `<p align="center">` with `<strong>` for main description. One sentence, 10-25 words. States what it *does*, not what it *is*.
-  - ✓ "Fast, type-safe HTTP server for Node.js"
-  - ✗ "A powerful and robust HTTP server framework"
-  - ✗ "This project is an HTTP server"
-- Subtitle: Use `<em>` for keywords/features/platform support line.
-- CTA Buttons: Use `for-the-badge` style badges for "Quick Start" and "License" links.
-- Platform Badges: Add AI IDE platform badges (Claude Code, Copilot, Cursor, etc.) in a separate `<p align="center">`.
-- Language switcher: Use `<p align="center">` with anchor tags. See language-guide.md.
-- Tech Stack Badges: Follow badge-styles.md grouping rules for project-specific badges.
-
----
-
-## Features / Why
-
-**Structure (Energetic):**
-```markdown
-## Features
-
-- ⚡ **Blazing fast** — Sub-millisecond response times
-- 🔒 **Secure by default** — JWT auth, CORS, rate limiting out of the box
-- 🎯 **Type-safe** — Full TypeScript inference, zero `any`
-```
-
-**Structure (Minimal):**
-```markdown
-## Features
-
-- Type-safe API with full inference
-- Zero-config TypeScript support
-- Built-in authentication and rate limiting
-```
-
-**Structure (Professional):**
-```markdown
-## Features
-
-| Feature | Description |
-|---|---|
-| Type Safety | Full TypeScript inference with zero configuration |
-| Authentication | JWT-based auth with role-based access control |
-```
-
-**Rules:**
-- Max 6 items. If the project has more, pick the 6 most differentiating.
-- Don't pad — if the project only has 2 real features, list 2.
-- Extract from: directory structure, API routes, code comments, package.json description.
-- Each item states a benefit, not just a feature name.
-
----
-
-## Quick Start
-
-**Structure:**
-```markdown
-## Quick Start
-
-### Prerequisites
-
-- Node.js 18+
-- PostgreSQL 14+
-
-### Install
-
-\`\`\`bash
-npm install my-package
-\`\`\`
-
-### Configure
-
-\`\`\`bash
-cp .env.example .env
-# Edit .env with your database credentials
-\`\`\`
-
-### Run
-
-\`\`\`bash
-npm run dev
-\`\`\`
-```
-
-**Rules:**
-- Max 4 steps: prerequisites → install → configure → run.
-- Each step is a single copy-pasteable command block.
-- No "Step 1:", "Step 2:" prefixes — use H3 headings or just the commands.
-- If Docker is available, offer it as the first option (fastest path to running).
-- Include minimum runtime version only if specified in the project (engines field, .python-version, .tool-versions, etc.).
-- For CLI tools: show installation methods (npm, brew, cargo, go install) then a usage example.
-
----
+Aim for a few logical steps without a fixed command ceiling. State directory context and separate terminals explicitly. Use subshells for sibling packages. Do not assume Docker is easier; promote it only when the available files provide a complete path. Use minimum runtime versions only when declared. Do not infer package publication from a package manifest. Do not show output that was neither documented nor tested.
 
 ## Usage
 
-**Structure:**
-```markdown
-## Usage
+Start with one real example from implementation/tests/examples and add up to three advanced cases when needed. Keep imports, options, API keys and return shape accurate. Use fenced blocks with language hints. Preserve executable code and explain necessary user-supplied values; do not use unfinished `xxx` or invented API methods.
 
-### Basic Request
+## Architecture / Workflow
 
-\`\`\`typescript
-import { createClient } from 'my-package'
-
-const client = createClient({ apiKey: 'xxx' })
-const result = await client.users.get('123')
-console.log(result)
-\`\`\`
-
-### With Error Handling
-
-\`\`\`typescript
-try {
-  const result = await client.users.get('123')
-} catch (error) {
-  if (error.code === 'NOT_FOUND') {
-    // handle
-  }
-}
-\`\`\`
-```
-
-**Rules:**
-- Real code examples from the project — not invented ones.
-- One example per core feature, max 4 examples.
-- Code blocks with language hints (`typescript`, `python`, `go`, etc.).
-- Minimal comments — the code should be self-explanatory.
-- Use H3 headings to label each example.
-
----
-
-## Architecture Diagram
-
-**All projects must include at least one architecture diagram.** The diagram type is selected based on project architecture (see diagram-templates.md).
-
-**Structure:**
-```markdown
-## Architecture
-
-\`\`\`mermaid
-%% color classes and diagram here %%
-\`\`\`
-```
-
-**Diagram Type Selection:**
-
-| Project Type | Diagram Type |
-|---|---|
-| Microservice / Frontend-Backend / Monolithic / Event-Driven | Architecture Graph |
-| CLI Tool / Data Pipeline | Flowchart |
-| Library / Package (OOP-heavy) | Class Diagram |
-| API Service | Sequence Diagram |
-| Database-heavy project | ER Diagram |
-| Stateful Application | State Diagram |
-
-**Rules:**
-- One-liner intro before the diagram (optional, skip for Minimal tone).
-- Mermaid block per diagram-templates.md.
-- **Always apply color classes** — never generate a colorless diagram.
-- Extract real component names, class names, table names from source code.
-- No "The following diagram illustrates..." — just put the diagram.
-- No `<details>` wrapper — diagrams should be immediately visible.
-- If the project has complex data models, add a secondary diagram (e.g., Architecture Graph + ER Diagram).
-
----
+Include only if the reader benefits and component relationships are verified. Prefer a small flowchart for a pipeline and a sequence diagram for a specific interaction; a function library need not have a class diagram. Read `diagram-templates.md` only when needed. Default Mermaid themes are acceptable; diagram-specific syntax takes priority over styling. Use prose for portable rendering. Do not create an SVG asset without authorization.
 
 ## Configuration
 
-**Structure:**
-```markdown
-## Configuration
+Include actual public configuration keys even if they are read in source rather than a config file. Use a concise table: key | purpose | required | default. Distinguish a documented example from a real runtime default. Link `.env.example`/schema when present. Never read/copy real credential files; do not expose passwords, tokens, private URLs, or personal data. Explain necessary user-provided secrets without supplying real ones.
 
-### Environment Variables
+## Public API
 
-| Variable | Description | Default |
-|---|---|---|
-| \`DATABASE_URL\` | PostgreSQL connection string | — |
-| \`PORT\` | Server port | \`3000\` |
-| \`LOG_LEVEL\` | Logging level | \`info\` |
-```
+For libraries, describe exported functions/types and supported signatures. For REST, include mounted path, method, request shape and auth rules with exceptions. Trace router prefixes and middleware. For GraphQL/gRPC, describe actual schema/service methods. Do not state that every route requires authentication when login/registration/public routes are exceptions. Link larger existing API documentation instead of duplicating everything.
 
-**Rules:**
-- Only include if config files are detected (.env, config.yaml, etc.).
-- Table format: key | description | default.
-- Group by file if multiple config files exist.
-- Include `.env.example` values if the file exists.
-- Use inline code for variable names.
+## Navigation / Directory Structure / Tech Stack
 
----
+Use a package map or depth-2/3 annotated tree only when it helps readers navigate. Include only existing paths; ignore generated/cache/dependency folders. Explain top-level responsibilities from evidence. Include a small tech table only when it adds useful context; do not list every dependency or repeat all Hero badges.
 
-## API
+## Deployment and Troubleshooting
 
-**Structure:**
-```markdown
-## API
+Document deployment only with a verified configuration and required setup; CI existence does not imply a passing build or deployment pipeline. Link actual workflows. Include troubleshooting for evidenced failure conditions, with a diagnosis and specific remedy; do not invent errors to fill a section.
 
-### Endpoints
+## Contributing and License
 
-| Method | Path | Description | Auth |
-|---|---|---|---|
-| GET | \`/users\` | List all users | Bearer |
-| POST | \`/users\` | Create a user | Bearer |
-| GET | \`/users/:id\` | Get user by ID | Bearer |
-```
+Link existing contribution rules. Include actual development/test commands only if declared; do not invent commit conventions. Add a license name/link only after reading the actual license. Resolve links from each output file's directory. Mention missing/ambiguous licensing in delivery, not as a fabricated section or badge.
 
-**Rules:**
-- Only include if API routes are detected.
-- Table format: method | path | description | auth.
-- Group by resource/module (Users, Posts, Auth, etc.).
-- For REST APIs: include HTTP method + path.
-- For GraphQL: include query/mutation name + return type.
-- For gRPC: include service + method + request/response types.
+## Content budgets
 
----
-
-## Directory Structure
-
-**Structure:**
-```markdown
-## Project Structure
-
-\`\`\`
-src/
-├── api/              # API route handlers
-│   ├── users.ts      # User endpoints
-│   └── posts.ts      # Post endpoints
-├── models/           # Database models
-├── services/         # Business logic
-├── utils/            # Shared utilities
-└── index.ts          # Entry point
-config/               # Configuration files
-tests/                # Test files
-\`\`\`
-```
-
-**Rules:**
-- Exclude: `node_modules`, `.git`, `build`, `dist`, `__pycache__`, `.venv`, `.next`, `coverage`, `.DS_Store`
-- Each top-level directory gets a one-line comment.
-- Max depth: 3 levels.
-- Use `├──`, `│`, `└──` tree characters.
-- Include key files at root level (package.json, tsconfig.json, Dockerfile, etc.).
-
----
-
-## Tech Stack
-
-**Structure:**
-```markdown
-## Tech Stack
-
-### Frontend
-
-| Technology | Purpose |
-|---|---|
-| Vue 3 | UI framework |
-| Pinia | State management |
-
-### Backend
-
-| Technology | Purpose |
-|---|---|
-| Express | HTTP server |
-| Prisma | ORM |
-
-### Infrastructure
-
-| Technology | Purpose |
-|---|---|
-| Docker | Containerization |
-| PostgreSQL | Database |
-```
-
-**Rules:**
-- Group by layer: Frontend / Backend / Database / Infrastructure / Testing.
-- Only include technologies actually used (not devDependencies unless significant like test frameworks).
-- No "Other Tools" catch-all category.
-- Use the technology name, not the package name (e.g., "Vue 3" not "vue@3").
-
----
-
-## Deployment
-
-**Structure:**
-```markdown
-## Deployment
-
-### Docker
-
-\`\`\`bash
-docker build -t my-app .
-docker run -p 3000:3000 my-app
-\`\`\`
-
-### Docker Compose
-
-\`\`\`bash
-docker-compose up -d
-\`\`\`
-
-### CI/CD
-
-This project uses GitHub Actions for CI/CD. See \`.github/workflows/\` for configuration.
-```
-
-**Rules:**
-- Only include if Dockerfile, docker-compose.yml, or CI config is detected.
-- Docker commands first (most common deployment method).
-- Include actual commands from the project, not generic examples.
-- If CI/CD is configured, mention it and link to the config.
-
----
-
-## Contributing
-
-**Structure:**
-```markdown
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (\`git checkout -b feature/amazing\`)
-3. Commit your changes (\`git commit -m 'feat: add amazing feature'\`)
-4. Push to the branch (\`git push origin feature/amazing\`)
-5. Open a Pull Request
-```
-
-**Rules:**
-- Short. Fork → Branch → Commit → PR.
-- Link to CONTRIBUTING.md if it exists, otherwise inline the basics.
-- Include commit convention if the project uses one (conventional commits, etc.).
-- No "We welcome contributions!" opener — just the steps.
-
----
-
-## License
-
-**Structure:**
-```markdown
-## License
-
-[MIT](LICENSE)
-```
-
-**Rules:**
-- Name + link to LICENSE file. One line.
-- Read the LICENSE file to determine the license type.
-- No "This project is licensed under the MIT License — see the LICENSE file for details" boilerplate.
-
----
-
-## Beautification Summary
-
-This section summarizes which elements can be beautified with HTML during Phase 4.
-
-### Always Beautify (HTML)
-
-| Section | Element | Markdown → HTML |
-|---|---|---|
-| Hero | Title | `# Title` → `<h1 align="center">` |
-| Hero | Description | `> desc` → `<p align="center"><strong>` |
-| Hero | Subtitle | keywords → `<p align="center"><em>` |
-| Hero | CTA Buttons | `[text](url)` → `<img src="badge?style=for-the-badge">` |
-| Hero | Badges | `![alt](url)` → `<p align="center"><img>` |
-| Hero | Language Switcher | `[EN](url) · [中文](url)` → `<p align="center"><a>` |
-
-### Keep as Markdown
-
-| Section | Element | Reason |
-|---|---|---|
-| Features | Lists | Easier to maintain |
-| Quick Start | Code blocks | Has syntax highlighting |
-| Usage | Code blocks | Has syntax highlighting |
-| Architecture | Mermaid diagrams | GitHub native support |
-| Configuration | Tables | Easier to maintain |
-| API | Tables | Easier to maintain |
-| Directory Structure | Code blocks | Has syntax highlighting |
-| Tech Stack | Tables | Easier to maintain |
-| Deployment | Code blocks | Has syntax highlighting |
-| Contributing | Lists | Easier to maintain |
-| License | Link | GitHub styling sufficient |
-
-### Detailed Rules
-
-For complete beautification rules, HTML templates, and transformation examples, see `references/beautification-rules.md`.
+Treat short (~80–150 lines), standard (~150–300), and detailed as ceilings to guide reduction, not minimum targets. Let small projects be much shorter. Prioritize first-result clarity over a line quota. Link optional long references; keep first-use code visible. Ensure headings, links, translations, and managed IDs are checked after composition.

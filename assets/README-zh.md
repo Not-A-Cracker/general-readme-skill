@@ -1,612 +1,180 @@
-<h1 align="center">General README Skill</h1>
-<p align="center">
-  <strong>使用 AI 编程助手为任意项目生成专业的 README 文件</strong>
-  <br />
-  <em>零依赖 · 多平台 · 多语言 · 支持 Claude Code、Copilot、Cursor 等 AI IDE</em>
-</p>
+# General README Skill
 
-<p align="center">
-  <a href="#快速开始"><img src="https://img.shields.io/badge/快速开始-4CAF50?style=for-the-badge" alt="Quick Start" /></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/许可证-MIT-yellow?style=for-the-badge" alt="License: MIT" /></a>
-</p>
+让 AI 编程助手生成有源码依据、容易上手、视觉清晰的 README：先确认读者偏好，再写真实可用的说明，而不是堆模板和徽章。
 
-<p align="center">
-  <a href="https://docs.anthropic.com/en/docs/claude-code"><img src="https://img.shields.io/badge/Claude_Code-D97757?style=flat&logo=claude&logoColor=white" alt="Claude Code" /></a>
-  <a href="https://github.com/features/copilot"><img src="https://img.shields.io/badge/GitHub_Copilot-000000?style=flat&logo=github&logoColor=white" alt="GitHub Copilot" /></a>
-  <a href="https://cursor.sh"><img src="https://img.shields.io/badge/Cursor-000000?style=flat&logo=cursor&logoColor=white" alt="Cursor" /></a>
-</p>
+![许可证：MIT](https://img.shields.io/badge/license-MIT-2563eb?style=flat)
+![Skill 版本：2.0.0](https://img.shields.io/badge/skill-2.0.0-334155?style=flat)
 
-<p align="center">
-  <a href="../README.md">English</a> · <a href="README-zh.md">中文</a> · <a href="README-ja.md">日本語</a> · <a href="README-ko.md">한국어</a> · <a href="README-ru.md">Русский</a>
-</p>
+[English](../README.md) · 中文
 
-<p align="center">
-  <img src="intro.png" alt="General README Skill — 使用 AI 编程助手为任意项目生成专业的 README 文件" width="800" />
-</p>
-
-## 功能特性
-
-| 功能 | 描述 |
-|---|---|
-| 多种写作风格 | 三种写作配置：活力型、简约型和专业型 |
-| 徽章系统 | 自动生成 shields.io 徽章，支持三种视觉样式 |
-| 多语言支持 | 支持生成英文、中文、日文、韩文、俄文等 README 文件 |
-| 零依赖 | 无需外部 CLI、运行时或网络服务 |
-| 多平台支持 | 兼容 Claude Code、GitHub Copilot 和 Cursor |
-| 隐私保护 | 自动屏蔽敏感密钥、密码和私人信息 |
-
-## 工作流程概览
-
-技能遵循 **配置 → 扫描 → 生成 → 美化 → 输出** 的流水线：
-
-```mermaid
-graph LR
-    A[用户触发] --> B[阶段 1<br/>配置]
-    B --> C[阶段 2<br/>扫描]
-    C --> D[阶段 3<br/>生成]
-    D --> E[阶段 4<br/>美化]
-    E --> F[阶段 5<br/>输出]
-    style A fill:#E6A23C,color:#fff
-    style B fill:#409EFF,color:#fff
-    style C fill:#67C23A,color:#fff
-    style D fill:#F56C6C,color:#fff
-    style E fill:#9B59B6,color:#fff
-    style F fill:#909399,color:#fff
-```
-
-## 阶段 1：配置
-
-在生成前收集配置选项。所有选项都有固定的默认值。
-
-### 1.1 写作风格选择
-
-选择 README 的写作风格：
-
-| 风格 | 特点 | 参考 | 适用场景 |
-|---|---|---|---|
-| **活力型** | 直接、自信、允许使用表情符号 | FastAPI | 开源项目、开发者工具 |
-| **简约型** | 简洁、代码优先、无冗余描述 | Tailwind CSS | CLI 工具、库 |
-| **专业型** | 中立、结构化、正式布局 | Kubernetes | 企业项目、文档 |
-
-**示例 — 同一功能的三种风格：**
-
-<details>
-<summary><b>活力型风格</b></summary>
-
-```markdown
-## 功能特性
-
-- ⚡ **极速响应** — 亚毫秒级响应时间
-- 🔒 **默认安全** — 开箱即用的 JWT 认证、CORS、速率限制
-- 🎯 **类型安全** — 完整的 TypeScript 推断，零 `any`
-```
-</details>
-
-<details>
-<summary><b>简约型风格</b></summary>
-
-```markdown
-## 功能特性
-
-- 类型安全的 API，完整推断
-- 零配置 TypeScript 支持
-- 内置认证和速率限制
-```
-</details>
-
-<details>
-<summary><b>专业型风格</b></summary>
-
-```markdown
-## 功能特性
-
-| 功能 | 描述 |
-|---|---|
-| 类型安全 | 零配置的完整 TypeScript 推断 |
-| 认证 | 基于 JWT 的认证，支持基于角色的访问控制 |
-```
-</details>
-
-### 1.2 徽章样式选择
-
-选择 shields.io 徽章外观：
-
-| 样式 | 参数 | 预览 |
-|---|---|---|
-| **扁平**（默认） | `style=flat` | ![Flat](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white) |
-| **扁平方形** | `style=flat-square` | ![Flat-square](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white) |
-| **大号** | `style=for-the-badge` | ![For-the-badge](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white) |
-
-### 1.3 多语言设置
-
-- **主要语言**（默认：英文）
-- **次要语言**（可选：中文、日文、韩文、西班牙文、法文、俄文等）
-
-文件命名遵循 ISO 639-1 代码：
-
-| 语言 | 文件 | 代码 |
-|---|---|---|
-| 英文（主要） | `README.md` | — |
-| 简体中文 | `README-zh.md` | zh |
-| 日文 | `README-ja.md` | ja |
-| 韩文 | `README-ko.md` | ko |
-| 俄文 | `README-ru.md` | ru |
-
----
-
-## 阶段 2：项目扫描
-
-使用内置工具扫描本地项目目录。**只读取静态文件 — 永远不执行、修改或删除。**
-
-### 2.1 检测流水线
-
-```mermaid
-graph TD
-    A[开始扫描] --> B{清单文件<br/>存在？}
-    B -->|是| C[解析清单]
-    B -->|否| D{依赖文件<br/>存在？}
-    D -->|是| E[解析依赖]
-    D -->|否| F[统计文件<br/>扩展名]
-    C --> G[语言 &<br/>框架]
-    E --> G
-    F --> G
-    G --> H[架构类型]
-    H --> I[API 风格]
-    I --> J[许可证]
-    J --> K[项目类型]
-    style A fill:#E6A23C
-    style G fill:#409EFF
-    style K fill:#67C23A
-```
-
-### 2.2 检测内容
-
-| 检测项 | 源文件 | 输出 |
-|---|---|---|
-| **语言** | package.json, pyproject.toml, go.mod, Cargo.toml | 主要语言 |
-| **框架** | dependencies/devDependencies 字段 | React, Vue, Express, Django 等 |
-| **构建/CI** | Makefile, Dockerfile, .github/workflows | 构建命令、CI 流水线 |
-| **数据库** | DATABASE_URL, ORM 配置 | PostgreSQL, Redis, Prisma 等 |
-| **架构** | 目录结构, .proto 文件 | 微服务、单体等 |
-| **API 风格** | 路由文件, .proto, .graphql | REST, gRPC, GraphQL, WebSocket |
-| **许可证** | LICENSE, LICENSE.md | MIT, Apache-2.0, GPL-3.0 等 |
-| **项目类型** | package.json scripts, bin 字段 | 库、应用、CLI、静态站点 |
-
-### 2.3 扫描输出示例
-
-对于一个典型的 Node.js 项目（含 `package.json`）：
-
-```
-┌─ 语言: TypeScript
-├─ 框架: Express, Prisma
-├─ 数据库: PostgreSQL, Redis
-├─ 构建: npm scripts, Docker
-├─ CI: GitHub Actions
-├─ API: REST
-├─ 许可证: MIT
-└─ 类型: 应用程序
-```
-
----
-
-## 阶段 3：生成内容
-
-加载参考文件，然后按照**固定章节顺序**（倒金字塔）生成内容。
-
-### 3.1 参考文件
-
-所有参考文件位于 `references/` 文件夹：
-
-| 文件 | 用途 |
-|---|---|
-| `tone-profiles.md` | 3 种写作风格的规则和示例短语 |
-| `badge-styles.md` | 徽章布局和分组规则 |
-| `badges.md` | 技术 → shields.io 徽章 URL 映射（150+ 条目） |
-| `diagram-templates.md` | Mermaid 模板 + SVG 后备方案 |
-| `section-guidelines.md` | 章节写作规则和禁用短语 |
-| `language-guide.md` | 多语言命名和切换器规则 |
-
-### 3.2 固定章节顺序
-
-章节按此顺序生成。**如果没有匹配的项目数据，跳过该章节。**
-
-```mermaid
-graph TD
-    A[1. 标题区] --> B[2. 功能特性]
-    B --> C[3. 快速开始]
-    C --> D[4. 使用方法]
-    D --> E[5. 架构图]
-    E --> F[6. 配置]
-    F --> G[7. API]
-    G --> H[8. 目录结构]
-    H --> I[9. 技术栈]
-    I --> J[10. 部署]
-    J --> K[11. 贡献]
-    K --> L[12. 许可证]
-    style A fill:#E6A23C
-    style B fill:#409EFF
-    style L fill:#67C23A
-```
-
-### 3.3 章节示例
-
-#### 标题区
-
-```markdown
-# 项目名称
-
-> 一句话描述项目功能
-
-![badge1](url)
-![badge2](url)
-```
-
-#### 功能特性（专业型风格）
-
-```markdown
-## 功能特性
-
-| 功能 | 描述 |
-|---|---|
-| 类型安全 | 零配置的完整 TypeScript 推断 |
-| 认证 | 基于 JWT 的认证，支持基于角色的访问控制 |
-```
-
-#### 快速开始
-
-````markdown
-## 快速开始
-
-### 前置要求
-
-- Node.js 18+
-- PostgreSQL 14+
-
-### 安装
-
-```bash
-npm install my-package
-```
-
-### 配置
-
-```bash
-cp .env.example .env
-```
-
-### 运行
-
-```bash
-npm run dev
-```
-````
-
-#### 架构图
-
-````markdown
-## 架构
-
-```mermaid
-graph LR
-    A[客户端<br/>React] --> B[API<br/>Express]
-    B --> C[认证<br/>JWT]
-    B --> D[数据库<br/>PostgreSQL]
-```
-````
-
-#### 目录结构
-
-````markdown
-## 项目结构
-
-```
-src/
-├── api/              # API 路由处理器
-├── services/         # 业务逻辑
-├── models/           # 数据库模型
-└── index.ts          # 入口文件
-```
-````
-
-### 3.4 图表模板
-
-技能包含预构建的 Mermaid 模板，适用于常见架构：
-
-#### 微服务架构
-
-```mermaid
-graph LR
-    A[客户端<br/>React] --> B[API 网关<br/>Express]
-    B --> C[用户服务<br/>Go]
-    B --> D[订单服务<br/>Go]
-    B --> E[支付服务<br/>Go]
-    C --> F[(PostgreSQL)]
-    D --> F
-    E --> G[(Redis)]
-```
-
-#### 前后端分离
-
-```mermaid
-graph LR
-    A[前端<br/>Vue.js] --> B[API 服务器<br/>Express]
-    B --> C[认证模块<br/>JWT]
-    B --> D[业务逻辑<br/>TypeScript]
-    D --> E[(PostgreSQL)]
-    D --> F[(Redis)]
-```
-
-#### 单体分层
-
-```mermaid
-graph TD
-    A[UI 层<br/>React] --> B[控制器层<br/>Express]
-    B --> C[服务层<br/>TypeScript]
-    C --> D[数据层<br/>Prisma]
-    D --> E[(PostgreSQL)]
-```
-
-#### 事件驱动
-
-```mermaid
-graph LR
-    A[生产者<br/>Express] --> B[消息队列<br/>Kafka]
-    B --> C[消费者 A<br/>Go]
-    B --> D[消费者 B<br/>Python]
-    B --> E[消费者 C<br/>Node.js]
-    C --> F[(PostgreSQL)]
-    D --> G[(MongoDB)]
-    E --> H[(Redis)]
-```
-
-### 3.5 徽章分组规则
-
-徽章按以下顺序分组：
-
-| 行 | 内容 | 最大数量 |
-|---|---|---|
-| 第 1 行 — 标识 | 构建状态、版本、许可证、主要语言 | 4 |
-| 第 2 行 — 技术栈 | 框架、数据库、关键工具 | 6 |
-| 第 3+ 行 — 条件 | 下载量、星标、覆盖率（仅在数据存在时） | — |
-
-**示例：**
-
-```markdown
-![Build](https://img.shields.io/github/actions/workflow/status/user/repo/ci.yml)
-![Version](https://img.shields.io/npm/v/package)
-![License](https://img.shields.io/badge/license-MIT-green)
-![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)
-
-![React](https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=black)
-![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=node.js&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat&logo=postgresql&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)
-```
-
-### 3.6 关键生成规则
-
-1. **禁止编造** — 所有功能、命令、代码示例必须来自真实项目文件
-2. **风格一致** — 所有文本遵循选定的写作风格
-3. **徽章规则** — 遵循 `badge-styles.md` 中的分组和样式
-4. **隐私保护** — 屏蔽敏感密钥、密码和私人信息
-5. **增量更新** — 保留用 `<!-- MANUAL-START -->` / `<!-- MANUAL-END -->` 标记的手动内容
-
----
-
-## 阶段 4：美化优化（自动触发）
-
-阶段 3 生成 README 后，此阶段自动触发，通过将适合的 Markdown 语法替换为 HTML 来增强视觉效果。
-
-### 4.1 执行流程
-
-**步骤 1：分析（自动）**
-扫描生成的 README，识别可美化的元素。
-
-**步骤 2：确认（用户交互）**
-向用户展示美化建议：
-
-```
-AI: README 生成完成！正在分析美化机会...
-
-发现以下可美化项目：
-
-1. ✅ [Hero] 标题居中 → <h1 align="center">
-2. ✅ [Hero] 描述居中加粗 → <p align="center"><strong>
-3. ✅ [Hero] 添加 CTA 按钮
-4. ✅ [Hero] 平台徽章居中
-5. ⚪ [内容] 表格保持 Markdown（更易维护）
-6. ⚪ [代码] 代码块保持 Markdown（有语法高亮）
-
-是否接受这些建议？
-[全部接受] [逐条确认] [全部拒绝]
-```
-
-**步骤 3：执行（自动）**
-根据用户确认执行美化。
-
-### 4.2 美化规则
-
-| 区域 | 策略 | 原因 |
-|---|---|---|
-| **Hero** | 必须美化（HTML） | 视觉效果显著提升 |
-| **内容** | 保持 Markdown | 更易维护 |
-| **代码/图表** | 保持 Markdown | 语法高亮 / GitHub 原生支持 |
-| **结构** | 保持 Markdown | GitHub 样式已足够 |
-
-详细规则和 HTML 模板请参见 `references/beautification-rules.md`。
-
----
-
-## 阶段 5：输出
-
-### 5.1 文件生成
-
-1. 生成主要语言的 `README.md`
-2. 生成次要语言文件：`README-{lang}.md`
-3. 在每个 README 文件顶部添加语言切换器
-
-**语言切换器格式：**
-
-```html
-<p align="center">
-  <a href="README.md">English</a> · <a href="README-zh.md">中文</a> · <a href="README-ja.md">日本語</a> · <a href="README-ko.md">한국어</a> · <a href="README-ru.md">Русский</a>
-</p>
-```
-
-### 5.2 输出格式
-
-- UTF-8 编码
-- 统一换行符（LF）
-- 章节间干净的空行
-- 无尾随空白
-
----
+[快速开始](#快速开始) · [偏好配置](#偏好配置) · [质量检查](#质量检查)
 
 ## 快速开始
 
-### Claude Code
+核心生成流程只依赖 agent 原生的读取、搜索和编辑工具，无需额外运行时、第三方 CLI 或网络服务。可选离线检查器需要 **Python 3.9+**，不需要第三方包。
+
+### 完整安装
+
+将 `SKILL.md`、`references/` 和 `scripts/` 一起放进宿主的 skill 目录，保持相对路径。只复制入口文件会缺少必要规则。
+
+例如，在本仓库根目录安装到项目级 Claude Code 目录：
 
 ```bash
 mkdir -p .claude/skills/general-readme
 cp SKILL.md .claude/skills/general-readme/
-cp -r references/ .claude/skills/general-readme/
+cp -r references/ scripts/ .claude/skills/general-readme/
 ```
 
-### GitHub Copilot
+安装到另一个项目时，把目标改为那个项目的绝对 skill 目录。不要覆盖已有团队指令。
 
-```bash
-mkdir -p .github
-cp SKILL.md .github/copilot-instructions.md
-cp -r references/ .github/copilot-instructions/references/
-```
+参考安装指南：[Claude Code](../install/claude-code.md)、[GitHub Copilot](../install/copilot.md)、[Cursor](../install/cursor.md)。这些指南说明文件放置方式，实际加载和工具可用性仍需在对应宿主验证。自然语言调用最通用；`/readme` 是触发文本，不代表每个宿主都注册了同名斜杠命令。
 
-### Cursor
+### 得到第一个结果
 
-```bash
-mkdir -p .cursor/rules
-cp SKILL.md .cursor/rules/general-readme.mdc
-cp -r references/ .cursor/rules/references/
-```
+向 agent 发送：
 
+> 帮我写 README
+
+第一轮应集中询问未确定的偏好，并**停止等待你的回答**。回复具体选择或“用推荐配置”后，agent 才扫描静态项目文件、编辑约定的 README，并报告检查结果。
+
+如果希望直接交给 agent 决定：
+
+> 生成 README，不用问，英文，面向开发者，均衡布局，其余你决定。
+
+这类授权只覆盖未确定的偏好，不等于允许删除手写内容或执行项目安装、启动命令。
+
+## 2.0 解决什么问题
+
+| 用户痛点 | 本次升级 |
+|---|---|
+| agent 忘记询问 preference | 入口门槛：真实确认或明确授权后才能扫描、生成 |
+| 内容好看，快速开始却跑不通 | 命令、目录、前置条件和首次使用示例必须有项目依据 |
+| 所有 README 都长得一样 | 紧凑、均衡、展示型布局，限制首屏徽章，图片和图表可选 |
+| 更新覆盖维护者手写内容 | 成对生成区域标记，未标记内容视为手写，限定替换范围 |
+| 小项目被塞入不必要的架构和 API | 按应用、库、CLI、monorepo、skill、文档项目选择读者路径 |
+| 翻译版许可证、图片、锚点断链 | 每个文件独立计算相对路径和翻译后的标题锚点 |
+| “生成成功”掩盖了未验证问题 | 离线检查，并区分静态检查、运行验证和实际渲染 |
+
+这仍是一个指令型 skill，不是强制执行引擎。新门槛和回归案例降低遗漏风险，但实际遵循率需要在宿主 agent 上验证。
+
+## 偏好配置
+
+各项独立选择，不把“专业”自动等同于居中 HTML：
+
+| 偏好 | 可选项 |
+|---|---|
+| 语言 | 主语言，以及真正需要的翻译 |
+| 读者 | 使用者、开发者、贡献者 |
+| 布局 | 紧凑、均衡、展示型 |
+| 篇幅 | 简短、标准、详细 |
+| 语气 | 专业、简约、活力 |
+| 徽章 | 不放、flat、flat-square、for-the-badge |
+| 视觉素材 | 不放、已有相关素材、有源码依据的图表 |
+| 更新方式 | 默认保护手写内容，仅在授权范围重写 |
+| 渲染目标 | GitHub、可移植 Markdown |
+| Emoji | 除非明确要求，否则关闭 |
+
+推荐起点：当前请求语言、使用者、均衡、标准、专业、flat、已有素材、保留手写内容、GitHub。**推荐不等于用户已经同意。**“帮我做得美观”不能被解释成默认配置授权。
+
+一次回复即可：
+
+> 英文，面向开发者，简短，纯 Markdown，不要徽章，不要图，其余按推荐。
+
+`--no-beautify` 只确定紧凑布局；`--yes`、“用默认值”、“你决定”明确授权剩余偏好。同一项目的后续更新可以复用本会话真实确认的设置；跨会话或上下文丢失时，不应从已有 README 的样式推断用户同意。
+
+## 美观，但先服务读者
+
+| 布局 | 适用情况 | 展示方式 |
+|---|---|---|
+| **紧凑** | 小型库、CLI | 左对齐 Markdown，尽早给代码，最多 2 个徽章，无装饰性 Hero |
+| **均衡** | 大多数仓库 | 清晰标题和下一步，最多 4 个徽章，可选一张有用的真实素材 |
+| **展示型** | 有真实演示的产品 | 可选居中 Hero、文字导航、一张真实截图；正文保持 Markdown |
+
+语气与布局独立：专业不等于居中，活力不等于 emoji；可移植模式保持纯 Markdown。
+
+真实截图可以帮助理解产品，虚构 UI 不可以。架构图只有在能解释源码支持的关系时才加入，不要求每个项目都画图。不能把生成 README 所用的 AI 工具当成项目支持的平台。
+
+## 工作流程
+
+**确认 → 检查项目 → 规划 → 内容与设计合成 → 校验 → 交付**
+
+1. **确认：** 集中询问并等待，收到回答后简要复述配置。
+2. **检查项目：** 读取清单、入口、示例、测试和公开配置；不执行项目代码，不读取真实凭据。
+3. **规划：** 选择首次成功路径与必要章节，识别安全更新边界。
+4. **合成：** 内容和视觉同时生成，按需加载参考规则。
+5. **校验：** 核对声明依据、链接、锚点、标记和偏好一致性。
+6. **交付：** 只编辑约定文件，说明实际检查与未验证项。
+
+入口：[`SKILL.md`](../SKILL.md)；具体协议：[`references/`](../references/)。
+
+## 安全更新
+
+新生成章节使用稳定的成对标记：
+
+```markdown
+<!-- readme-skill:begin usage -->
 ## 使用方法
 
-在 AI 编程助手中输入 `/readme` 或说 "generate readme"。
+基于项目实际内容的说明。
+<!-- readme-skill:end usage -->
+```
 
-### 支持的命令
+只更新标记范围，保留范围外文字以及 `MANUAL-START` / `MANUAL-END` 手写区。已有未标记章节视为手写内容，旧 `AUTO-GENERATED` 或 `BEAUTIFIED` 标记不是整篇覆盖授权。
 
-| 命令 | 描述 |
+遇到需要替换的未标记章节，确认具体范围，不直接重写整篇，也不追加重复章节。详见[证据与更新规则](../references/evidence-and-updates.md)。
+
+## 质量检查
+
+从本仓库根目录检查目标项目，不执行其代码：
+
+```bash
+python3 scripts/check_readme.py --root /项目绝对路径 /项目绝对路径/README.md
+```
+
+`--json` 输出机器可读报告。只有用户授权保存过偏好记录时才提供 `--preferences /路径/preferences.json`；默认不创建状态文件。
+
+检查器覆盖本地路径与锚点、图片替代文字、代码围栏、生成/手写区域标记、已知模板残留、高可信敏感值格式、部分 Mermaid 错误以及偏好相关布局冲突；禁止链接越出项目根目录。退出码：`0` 无错误，`1` 校验错误，`2` 参数或读取失败，警告单独报告。
+
+它**不能证明**用户真实同意、内容事实正确、示例能运行、远端链接可访问、Mermaid 完整语法正确或 GitHub 渲染成功。详见[检查范围与限制](../references/quality-checks.md)。
+
+### 回归验证
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v
+```
+
+自动测试覆盖检查器和 skill 契约。[`tests/behavior-cases.json`](../tests/behavior-cases.json) 提供 17 个实际宿主 agent 评测场景，包括裸调用、部分偏好、上下文丢失、monorepo 和手写保护。这些是评测规范，不代表所有宿主均已通过。
+
+## 后续开发路线
+
+优先推进 **偏好可靠性 → 可信首次使用 → 安全维护 → 自适应视觉设计**，而不是主要增加徽章映射或更复杂的 HTML。
+
+下一步应在真实宿主上跑行为场景，再用代表性应用、库、CLI 和 monorepo 比较实际渲染效果。按[设计验收标准](../references/quality-checks.md#design-acceptance-rubric)评估清晰度、实用性、克制和可维护性，用实际结果替代审美承诺。
+
+## 仓库导航
+
+| 路径 | 用途 |
 |---|---|
-| `/readme` | 触发 README 生成 |
-| `generate readme` | 自然语言触发 |
-| `write readme` | 自然语言触发 |
-| `帮我写 README` | 中文语言触发 |
-| `更新README` | 更新现有 README |
+| `SKILL.md` | 入口门槛与主工作流 |
+| `references/preference-gate.md` | 提问、状态契约与恢复 |
+| `references/evidence-and-updates.md` | 证据记录与安全更新 |
+| `references/section-guidelines.md` | 各类项目的读者路径 |
+| `references/beautification-rules.md` | 布局与视觉设计体系 |
+| `references/quality-checks.md` | 校验边界和评测方法 |
+| `references/badge-styles.md`、`references/badges.md` | 可选徽章规则和映射 |
+| `references/diagram-templates.md`、`references/language-guide.md` | 可选图表与翻译 |
+| `scripts/check_readme.py` | 只读离线检查器 |
+| `tests/` | 自动测试和行为场景 |
+| `examples/` | 历史展示示例，不是已验证源码的 golden fixture |
+| `install/` | 宿主集成指南 |
+| `assets/` | 已有宣传图和翻译文档 |
 
-### 示例会话
-
-```
-用户: /readme
-
-AI: 请选择 README 的写作风格：
-    1. Professional (专业) — 默认
-    2. Energetic (活力)
-    3. Minimal (简约)
-
-用户: 1
-
-AI: 请选择徽章样式：
-    1. Flat (扁平) — 默认
-    2. Flat-square (扁平方形)
-    3. For-the-badge (大号)
-
-用户: 1
-
-AI: 请选择主要语言：
-    1. English (英文) — 默认
-    2. Chinese (中文)
-
-用户: 1
-
-AI: 是否需要添加次要语言？
-    [不需要] [中文] [日语] [韩语]
-
-用户: 不需要
-
-AI: 正在扫描项目结构...
-    检测到: TypeScript, Express, PostgreSQL
-    正在生成 README.md...
-    
-    ✅ README.md 生成完成！正在分析美化机会...
-
-    发现以下可美化项目：
-
-    1. ✅ [Hero] 标题居中 → <h1 align="center">
-    2. ✅ [Hero] 描述居中加粗 → <p align="center"><strong>
-    3. ✅ [Hero] 添加 CTA 按钮
-    4. ✅ [Hero] 平台徽章居中
-    5. ⚪ [内容] 表格保持 Markdown（更易维护）
-    6. ⚪ [代码] 代码块保持 Markdown（有语法高亮）
-
-    是否接受这些建议？
-    [全部接受] [逐条确认] [全部拒绝]
-
-用户: 全部接受
-
-AI: 正在执行美化...
-    ✅ README.md 已生成并美化完成！请检查并根据需要调整。
-```
-
-## 项目结构
-
-```
-general-readme-skill/
-├── SKILL.md                    # 主技能定义文件
-├── LICENSE                     # MIT 许可证
-├── README.md                   # 本文件
-├── examples/                   # 示例 README 文件
-│   ├── app-readme.md           # 全栈应用示例
-│   ├── cli-readme.md           # CLI 工具示例
-│   └── library-readme.md       # 库/包示例
-├── install/                    # 安装指南
-│   ├── claude-code.md          # Claude Code 设置
-│   ├── copilot.md              # GitHub Copilot 设置
-│   └── cursor.md               # Cursor 设置
-└── references/                 # 参考文件
-    ├── badges.md               # 技术徽章映射（150+ 条目）
-    ├── badge-styles.md         # 徽章布局规则
-    ├── beautification-rules.md # 阶段 4 美化规则和 HTML 模板
-    ├── diagram-templates.md    # Mermaid + SVG 模板
-    ├── language-guide.md       # 多语言规则
-    ├── section-guidelines.md   # 章节写作规则
-    └── tone-profiles.md        # 3 种写作风格定义
-```
-
-## 技术栈
-
-### 文档
-
-| 技术 | 用途 |
-|---|---|
-| Markdown | 主要内容格式 |
-| shields.io | 徽章生成（150+ 技术映射） |
-| Mermaid | 架构图（4 种模板类型） |
-
-### 支持平台
-
-| 平台 | 集成方式 |
-|---|---|
-| Claude Code | `.claude/skills/` 目录 |
-| GitHub Copilot | `.github/copilot-instructions.md` |
-| Cursor | `.cursor/rules/` 目录 |
+日文、韩文、俄文仍保留带历史提示的 1.x 指南；2.0 工作流以本页和英文主页为准。
 
 ## 贡献
 
-1. Fork 仓库
-2. 创建功能分支 (`git checkout -b feature/amazing`)
-3. 提交更改 (`git commit -m 'feat: add amazing feature'`)
-4. 推送到分支 (`git push origin feature/amazing`)
-5. 打开 Pull Request
+修改流程时，同步相关参考规则并补行为场景；修改检查器时，添加正反测试并运行回归套件。没有实际宿主调用记录，不要宣称某场景通过了宿主验证。
 
 ## 许可证
 
-[MIT](LICENSE)
+[MIT](../LICENSE)

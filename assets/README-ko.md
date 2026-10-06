@@ -1,3 +1,5 @@
+> **이 문서는 1.x 이전 가이드입니다. 2.0 절차는 [English](../README.md) 또는 [中文](README-zh.md)를 참고하세요. 아래의 이전 절차를 현재 실행 규칙으로 사용하지 마세요.**
+
 <h1 align="center">General README Skill</h1>
 <p align="center">
   <strong>AI 코딩 어시스턴트를 사용하여 모든 프로젝트의 전문적인 README 파일 생성</strong>
@@ -7,7 +9,7 @@
 
 <p align="center">
   <a href="#빠른-시작"><img src="https://img.shields.io/badge/빠른_시작-4CAF50?style=for-the-badge" alt="Quick Start" /></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/라이선스-MIT-yellow?style=for-the-badge" alt="License: MIT" /></a>
+  <a href="../LICENSE"><img src="https://img.shields.io/badge/라이선스-MIT-yellow?style=for-the-badge" alt="License: MIT" /></a>
 </p>
 
 <p align="center">

@@ -1,1 +1,5 @@
 docs
+__pycache__/
+*.py[cod]
+.readme-test-*/
+dist/

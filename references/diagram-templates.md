@@ -2,7 +2,7 @@
 
 Architecture diagram templates. Mermaid is the primary format — GitHub renders it natively. SVG is the fallback for complex architectures.
 
-**All projects must include at least one architecture diagram.** The diagram type is selected based on project architecture and domain.
+Include a diagram only when confirmed visual preferences allow it and source-backed relationships help the intended reader. Skip diagrams for simple projects or unsupported relationships. Treat every example below as syntax/layout guidance, not target-project evidence. Default Mermaid themes are acceptable. Prefer 3–8 readable nodes; group or link detailed docs for larger graphs. Create SVG assets only when explicitly authorized.
 
 ---
 
@@ -41,7 +41,9 @@ All diagrams use a consistent color palette. Apply colors via `classDef` and `st
 
 ### Applying Colors in Mermaid
 
-```mermaid
+Treat the following as a flowchart styling fragment, not a complete diagram. Insert after a `flowchart`/`graph` declaration only when styling is useful.
+
+```text
 %%{init: {'theme': 'base', 'themeVariables': {
   'primaryColor': '#3B82F6',
   'primaryTextColor': '#fff',
@@ -59,11 +61,11 @@ classDef queue fill:#06B6D4,stroke:#0891B2,color:#fff,stroke-width:2px
 ```
 
 **Rules:**
-- Always include `classDef` declarations at the top of the mermaid block
-- Apply colors with `class` statement at the end: `class A,B client`
-- Use `%%{init}%%` for theme customization (optional, for enhanced visual)
-- Text color: white (`#fff`) on all colored backgrounds
-- Stroke: 2px, darker shade of the fill color
+- Use diagram-specific syntax; flowchart `classDef` is not valid sequence-diagram syntax.
+- For flowcharts, place the graph declaration before styling; apply classes to the intended nodes.
+- Use `%%{init}%%` for optional theme customization, or keep a readable default theme.
+- Use dark text on light fills and light text only on sufficiently dark fills; check contrast.
+- Prefer restrained styling and readable labels over mandatory colors.
 
 ---
 
@@ -379,18 +381,6 @@ sequenceDiagram
         API->>Cache: SET user:{id} (TTL 300s)
     end
     API-->>Client: 200 OK + user data
-
-    classDef client fill:#3B82F6,stroke:#2563EB,color:#fff
-    classDef gateway fill:#F59E0B,stroke:#D97706,color:#fff
-    classDef auth fill:#F97316,stroke:#EA580C,color:#fff
-    classDef service fill:#10B981,stroke:#059669,color:#fff
-    classDef data fill:#8B5CF6,stroke:#7C3AED,color:#fff
-
-    class Client client
-    class API gateway
-    class Auth auth
-    class User service
-    class DB,Cache data
 ````
 
 **Rules:**
@@ -398,7 +388,7 @@ sequenceDiagram
 - Use `alt`/`else` for conditional flows (cache hit/miss, error handling)
 - Use `loop` for repeated operations
 - Participants represent actual components/services
-- Apply colors to participant boxes
+- Use native sequence-diagram theme/participant styling; never insert flowchart `classDef` or `class` directives
 
 ---
 
@@ -445,10 +435,7 @@ stateDiagram-v2
 
 ## SVG Fallback
 
-Use SVG when:
-- The architecture has >8 nodes and grouping would lose important detail
-- The developer explicitly requests SVG
-- The project needs branded/custom-styled diagrams
+Use an existing relevant SVG when available. Create a new SVG only when the developer explicitly requests or approves that supporting asset. For large graphs, group/split the verified relationships or link detailed documentation; node count and branding alone do not authorize asset creation.
 
 ### Dynamic Layout Algorithm
 
@@ -492,12 +479,12 @@ SVG nodes are positioned dynamically, not hardcoded.
 ## Decision Logic
 
 ```
-1. Detect project architecture from scan results
-2. Select PRIMARY diagram type from the selection table
-3. If project has complex data models → add SECONDARY diagram
-4. Extract real component names, class names, table names from source code
-5. Apply color classes to all nodes
-6. If node_count <= 10 → use Mermaid
-7. If node_count > 10 → use Mermaid with grouped nodes
-8. If developer requested SVG → use SVG with dynamic layout
+1. Check confirmed visuals/renderer preferences and the reader's need
+2. If relationships lack evidence or add no value → omit the diagram
+3. Select a diagram type that explains the actual interaction
+4. Extract source-backed names and edges; prefer 3–8 nodes
+5. Use valid diagram-specific syntax and readable default themes or restrained styling
+6. If too large → group/split or link existing detailed docs
+7. If portable rendering → use a concise prose explanation
+8. Create SVG only with explicit approval of the asset path
 ```

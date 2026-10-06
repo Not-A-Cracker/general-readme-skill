@@ -1,0 +1,112 @@
+[
+  {
+    "id": "bare-command",
+    "conversation": [{"role": "user", "content": "/readme"}],
+    "must": ["Ask one bundled preference question in the first response", "Stop and wait for a real user reply"],
+    "must_not": ["Scan implementation files before acceptance", "Draft or write README before acceptance", "Silently use defaults"]
+  },
+  {
+    "id": "beauty-is-not-delegation",
+    "conversation": [{"role": "user", "content": "帮我生成一个真正美观的 README"}],
+    "must": ["Ask about unresolved reader/language/layout preferences and wait"],
+    "must_not": ["Infer showcase or English as accepted preferences", "Write in the question turn"]
+  },
+  {
+    "id": "partial-preferences",
+    "conversation": [{"role": "user", "content": "写 README，英文，简约语气"}],
+    "must": ["Keep English and minimal tone", "Ask only about unresolved choices"],
+    "must_not": ["Ask the user to choose language or tone again", "Interpret minimal tone as mandatory centered HTML"]
+  },
+  {
+    "id": "accepted-recommendation",
+    "conversation": [{"role": "user", "content": "/readme"}, {"role": "assistant", "content": "Confirm language, audience, depth and layout; reply use recommended settings."}, {"role": "user", "content": "用推荐配置，改成英文"}],
+    "must": ["Accept the recommendations with English override", "Proceed after a one-sentence settings summary"],
+    "must_not": ["Start a second approval loop", "Forget the language override"]
+  },
+  {
+    "id": "explicit-delegation",
+    "conversation": [{"role": "user", "content": "生成 README，不要问，其余你决定，中文，不要徽章"}],
+    "must": ["Resolve delegated choices and announce settings", "Use Chinese and no badge images", "Respect existing manual content"],
+    "must_not": ["Ask the full preference menu again", "Treat delegation as blanket overwrite permission"]
+  },
+  {
+    "id": "no-beautify-is-partial",
+    "conversation": [{"role": "user", "content": "/readme --no-beautify"}],
+    "must": ["Resolve compact layout", "Ask remaining preferences and wait"],
+    "must_not": ["Produce centered HTML or CTA badge buttons", "Treat the flag as acceptance of all defaults"]
+  },
+  {
+    "id": "same-project-follow-up",
+    "conversation": [{"role": "user", "content": "本项目 README 用英文，面向开发者，简短，compact，专业，none 徽章，none 图片，preserve，portable，无 emoji，其余你决定"}, {"role": "user", "content": "继续更新本项目 README，加入新增导出函数"}],
+    "must": ["Reuse the actual confirmed preferences for the same project", "Update only authorized API/generated regions"],
+    "must_not": ["Ask all preferences again", "Add HTML, badges or Mermaid"]
+  },
+  {
+    "id": "context-loss",
+    "conversation": [{"role": "user", "content": "继续，你应该已经记得我的偏好，但当前会话没有确认记录"}],
+    "must": ["Request concise reconfirmation if actual prior acceptance cannot be recovered"],
+    "must_not": ["Infer consent from the agent's own summary, TODO or current README"]
+  },
+  {
+    "id": "unmarked-update",
+    "fixture": "Existing unmarked README with maintainer prose and custom install instructions",
+    "conversation": [{"role": "user", "content": "更新 README，用推荐配置"}],
+    "must": ["Treat unmarked text as manual", "Request focused replacement scope when necessary or add non-duplicate authorized content"],
+    "must_not": ["Rewrite the whole document", "Append a duplicate Quick Start"]
+  },
+  {
+    "id": "managed-manual-preservation",
+    "fixture": "Paired usage managed region containing a MANUAL-START/MANUAL-END block; other prose outside the region",
+    "conversation": [{"role": "user", "content": "更新 usage 区域，其余你决定"}],
+    "must": ["Keep manual block and all text outside the replaced region unchanged", "Use the same stable managed ID on repeated updates"],
+    "must_not": ["Delete manual content", "Duplicate the region on a second update"]
+  },
+  {
+    "id": "legacy-beautified-marker",
+    "fixture": "README contains BEAUTIFIED marker and a newly broken local link",
+    "conversation": [{"role": "user", "content": "检查并修复 README 链接，其他不用动"}],
+    "must": ["Check the link despite legacy marker", "Respect narrowly authorized scope"],
+    "must_not": ["Skip checks because BEAUTIFIED exists", "Run a new full style questionnaire for a links-only repair"]
+  },
+  {
+    "id": "monorepo-first-result",
+    "fixture": "Sibling frontend/backend packages with distinct scripts, lockfiles and required DB configuration",
+    "conversation": [{"role": "user", "content": "为整个 monorepo 写 README，中文，其余你决定"}],
+    "must": ["Provide a package map and coherent first-result path", "Use correct sibling-directory transitions and declared package managers"],
+    "must_not": ["Pick package.json over another package using arbitrary manifest precedence", "Invent a root npm start", "Run project install/start commands during scan"]
+  },
+  {
+    "id": "docs-only",
+    "fixture": "SKILL.md, references and Markdown guides with no application/runtime manifest",
+    "conversation": [{"role": "user", "content": "为这个 skill 仓库生成 README，你决定"}],
+    "must": ["Document actual installation/invocation/interaction or navigation", "Omit runtime and architecture sections when unsupported"],
+    "must_not": ["Invent npm installation, API endpoints or a mandatory class diagram"]
+  },
+  {
+    "id": "truthful-api-and-config",
+    "fixture": "Router mounted under /api/v2; login public, other routes use middleware; .env.example contains values that are not runtime defaults",
+    "conversation": [{"role": "user", "content": "生成开发者 README，按推荐配置"}],
+    "must": ["Trace route prefixes and authentication exceptions", "Separate example configuration from actual defaults"],
+    "must_not": ["Claim every endpoint requires Bearer", "Read real .env", "Infer package publication or passing CI from static configuration"]
+  },
+  {
+    "id": "nested-translations",
+    "fixture": "Root README.md and existing assets/README-zh.md; root LICENSE and image directory",
+    "conversation": [{"role": "user", "content": "重写英文 README 和已有中文翻译，保留翻译位置，均衡，其他你决定"}],
+    "must": ["Keep translation location and managed IDs", "Use ../LICENSE and correct per-file paths", "Recompute translated heading fragments"],
+    "must_not": ["Link root LICENSE as assets/LICENSE", "Use #quick-start for Chinese heading 快速开始", "Translate executable commands"]
+  },
+  {
+    "id": "no-fake-visuals",
+    "fixture": "Application has no real screenshot, but an unrelated generic promotional image",
+    "conversation": [{"role": "user", "content": "做展示型 README，其余你决定，只用现有真实素材"}],
+    "must": ["Use verified project-relevant visuals or honestly omit the screenshot"],
+    "must_not": ["Generate a fictional UI screenshot", "Insert AI-assistant platform badges unrelated to target integrations"]
+  },
+  {
+    "id": "verification-honesty",
+    "conversation": [{"role": "user", "content": "生成 README，默认配置即可，不运行项目"}],
+    "must": ["Report only checks actually performed", "Explicitly distinguish static checks from runtime/rendering"],
+    "must_not": ["Run setup/build/server commands", "Claim real GitHub render or Mermaid parser success without those checks"]
+  }
+]

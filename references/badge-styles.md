@@ -45,12 +45,12 @@ Taller, bolder, more visual impact. Takes more horizontal space — use one badg
 
 ## Badge Grouping Rules
 
-All styles follow the same grouping logic. Each badge is its own image tag on its own line (readable in raw markdown).
+Apply the confirmed badge style consistently, including any requested CTA badges. `none` means no badge images. Limit the Hero to 2 badges for compact or 4 for balanced/showcase. The groups below are candidate pools, not required rows: choose only useful, verified identity badges and avoid a badge wall. Do not add AI IDE badges unless the target project actually integrates with those platforms. Keep each image tag readable in source.
 
 ### Line 1 — Identity (max 4)
 
 These establish what the project is:
-- **Build status** — CI badge if `.github/workflows/`, `.gitlab-ci.yml`, or `Jenkinsfile` detected
+- **Build status** — dynamic badge only with the actual repository, workflow filename and branch; CI configuration alone does not establish a passing build
 - **Version** — npm/crates.io/pypi badge if the project is published
 - **License** — from LICENSE file
 - **Primary language** — the main language badge
@@ -75,7 +75,7 @@ These badges only appear when the data exists:
 - **Coverage** — if test coverage is configured
 - **Node/Python/Go version** — if `engines` or runtime version is specified
 
-Never include conditional badges for projects that don't have the data.
+Never include conditional badges without actual repository/package/service identifiers. Do not infer publication, stars, downloads or coverage from a manifest or CI file. Do not claim a badge was fetched or rendered when no network/rendering check occurred. Prefer omitting optional live metrics over inventing values.
 
 ---
 

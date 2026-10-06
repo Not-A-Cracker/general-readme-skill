@@ -1,213 +1,81 @@
-# Beautification Rules
+# README Design System
 
-Detailed rules for Phase 4: Beautification. These rules determine when and how to replace Markdown syntax with HTML for improved visual presentation.
+Compose content and visual hierarchy together after preference confirmation. Do not run an automatic HTML transformation or ask for beautification after writing. Treat `BEAUTIFIED` as a legacy marker, not a reason to skip checks.
 
----
+## Layout presets
 
-## General Principles
+| Preset | Hero | Navigation | Visuals | Badge budget |
+|---|---|---|---|---|
+| compact | Markdown H1 + one sentence | Usually unnecessary | No decorative images; only essential user-requested visuals | 0–2 |
+| balanced | Markdown H1 + short description | Plain text links when the document is long | One real screenshot or explanatory diagram when useful | 0–4 |
+| showcase | Optional centered HTML title/description | 1–2 plain-text action links | One real product/demo image, optionally a useful diagram later | 0–4 |
 
-1. **Only beautify when HTML produces clearly better visual results.** If Markdown looks fine, keep it.
-2. **Preserve readability.** HTML should be well-formatted and easy to read in raw form.
-3. **Maintain GitHub compatibility.** All HTML must render correctly on GitHub.
-4. **Keep content intact.** Never change the meaning or content of the README.
+Apply `renderer=portable` as Markdown-only, even with showcase spacing. Keep tone independent: professional does not mean centered, and energetic does not mean emoji. Use no emoji unless requested.
 
----
+## First screen
 
-## Beautifiable Elements
+Make purpose and next action visible without scrolling through badge walls:
 
-### Hero Region
+1. One project title; no duplicate H1.
+2. One concrete sentence: outcome + intended reader/context.
+3. A small row of relevant status/identity badges, or none.
+4. One obvious next step: Quick Start, install/use, or docs navigation.
+5. A real image only if it conveys the product better than text.
 
-| Element | Markdown | HTML | When to Apply |
-|---|---|---|---|
-| Title | `# Title` | `<h1 align="center">Title</h1>` | Always |
-| Description | `> Description` | `<p align="center"><strong>Description</strong></p>` | Always |
-| Subtitle | `keywords` | `<p align="center"><em>keywords</em></p>` | Always |
-| CTA Buttons | `[Quick Start](#)` | `<a href="#"><img src="badge?style=for-the-badge"></a>` | Always |
-| Platform Badges | `![Badge](url)` | `<p align="center"><img src="url"></p>` | Always |
-| Language Switcher | `[EN](README.md) · [中文](README-zh.md)` | `<p align="center"><a href="README.md">EN</a> · <a href="README-zh.md">中文</a></p>` | Always |
+Prefer text action links over badges that masquerade as buttons. Do not add a keyword subtitle that repeats the description. Put longer API/config/package references after the first successful use path. Add a table of contents only when navigation genuinely benefits; do not duplicate the Hero action links and a short document's entire section list.
 
-### Content Region
-
-| Element | Markdown | HTML | When to Apply |
-|---|---|---|---|
-| Tables | `\| col1 \| col2 \|` | Keep Markdown | Never (easier to maintain) |
-| Lists | `- item` | Keep Markdown | Never (easier to maintain) |
-| Collapsible Panels | `<details><summary>` | Keep HTML | Already formatted |
-| Blockquotes | `> text` | Keep Markdown | Never (GitHub styling sufficient) |
-
-### Code Region
-
-| Element | Markdown | HTML | When to Apply |
-|---|---|---|---|
-| Code Blocks | ` ```code``` ` | Keep Markdown | Never (has syntax highlighting) |
-| Mermaid Diagrams | ` ```mermaid ``` ` | Keep Markdown | Never (GitHub native support) |
-| Inline Code | `` `code` `` | Keep Markdown | Never (GitHub styling sufficient) |
-
-### Structure Region
-
-| Element | Markdown | HTML | When to Apply |
-|---|---|---|---|
-| Dividers | `---` | Keep Markdown | Never (GitHub styling sufficient) |
-| Anchor Links | `[text](#anchor)` | Keep Markdown | Never (GitHub styling sufficient) |
-| Section Headers | `## Title` | Keep Markdown | Never (GitHub styling consistent) |
-
----
-
-## HTML Templates
-
-### Hero Title
-
-```html
-<h1 align="center">{PROJECT_NAME}</h1>
-```
-
-### Hero Description
-
-```html
-<p align="center">
-  <strong>{ONE_LINE_DESCRIPTION}</strong>
-</p>
-```
-
-### Hero Subtitle
-
-```html
-<p align="center">
-  <em>{KEYWORDS}</em>
-</p>
-```
-
-### CTA Buttons
-
-```html
-<p align="center">
-  <a href="#quick-start"><img src="https://img.shields.io/badge/Quick_Start-{COLOR}?style=for-the-badge" alt="Quick Start" /></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-{LICENSE_TYPE}-{COLOR}?style=for-the-badge" alt="License" /></a>
-</p>
-```
-
-### Platform Badges
-
-```html
-<p align="center">
-  <a href="https://docs.anthropic.com/en/docs/claude-code"><img src="https://img.shields.io/badge/Claude_Code-D97757?style=flat&logo=claude&logoColor=white" alt="Claude Code" /></a>
-  <a href="https://github.com/features/copilot"><img src="https://img.shields.io/badge/GitHub_Copilot-000000?style=flat&logo=github&logoColor=white" alt="GitHub Copilot" /></a>
-  <a href="https://cursor.sh"><img src="https://img.shields.io/badge/Cursor-000000?style=flat&logo=cursor&logoColor=white" alt="Cursor" /></a>
-</p>
-```
-
-### Language Switcher
-
-```html
-<p align="center">
-  <a href="README.md">English</a> · <a href="README-zh.md">中文</a> · <a href="README-ja.md">日本語</a> · <a href="README-ko.md">한국어</a> · <a href="README-ru.md">Русский</a>
-</p>
-```
-
-### Combined Hero Section
-
-```html
-<h1 align="center">{PROJECT_NAME}</h1>
-<p align="center">
-  <strong>{ONE_LINE_DESCRIPTION}</strong>
-  <br />
-  <em>{KEYWORDS}</em>
-</p>
-
-<p align="center">
-  <a href="#quick-start"><img src="https://img.shields.io/badge/Quick_Start-4CAF50?style=for-the-badge" alt="Quick Start" /></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" alt="License" /></a>
-</p>
-
-<p align="center">
-  {PLATFORM_BADGES}
-</p>
-
-<p align="center">
-  {LANGUAGE_SWITCHER}
-</p>
-```
-
----
-
-## Transformation Examples
-
-### Before (Markdown)
+## Compact and balanced pattern
 
 ```markdown
-# My Project
+# Project Name
 
-> A fast, type-safe HTTP server for Node.js
+One concrete sentence describing the outcome and intended reader.
 
-![Build](https://img.shields.io/github/actions/workflow/status/user/repo/ci.yml)
-![Version](https://img.shields.io/npm/v/package)
-![License](https://img.shields.io/badge/license-MIT-green)
+[Quick Start](#quick-start) · [Usage](#usage)
 
-[English](README.md) · [中文](README-zh.md)
+## Quick Start
+
+Verified commands and a first useful example.
 ```
 
-### After (HTML)
+Use this as a structural pattern only; replace sample text with project evidence. Do not copy links for sections that do not exist. Compute heading fragments for the actual language. Keep prose and code readable in the raw file.
+
+## Showcase pattern
 
 ```html
-<h1 align="center">My Project</h1>
+<h1 align="center">Project Name</h1>
+<p align="center">One concrete, evidence-based description.</p>
 <p align="center">
-  <strong>A fast, type-safe HTTP server for Node.js</strong>
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/github/actions/workflow/status/user/repo/ci.yml" alt="Build" />
-  <img src="https://img.shields.io/npm/v/package" alt="Version" />
-  <img src="https://img.shields.io/badge/license-MIT-green" alt="License" />
-</p>
-
-<p align="center">
-  <a href="README.md">English</a> · <a href="README-zh.md">中文</a>
+  <a href="#quick-start">Quick Start</a> · <a href="#usage">Usage</a>
 </p>
 ```
 
----
+Escape text in HTML. Use Markdown for the body, with blank lines after HTML blocks. Do not wrap the entire README in a `<div>` because Markdown rendering can change. Do not insert Markdown syntax inside raw HTML paragraphs. Use only GitHub-supported simple HTML; no CSS, scripts, forms, iframes, fixed-width multi-column grids, or base64 images.
 
-## User Interaction Format
+## Image policy
 
-When presenting beautification suggestions to the user, use this format:
+- Prefer existing screenshots, terminal captures, or diagrams tied to the real project.
+- Inspect an asset before using it. A generic marketing poster is not proof of a functioning UI.
+- Use descriptive alt text explaining what is shown. Do not use "image" or "screenshot" alone.
+- Keep one Hero image; avoid huge screenshots with unreadable text. Prefer a responsive image with no fixed pixel width in Markdown.
+- Use an existing `<picture>` dark/light pair only when both assets exist and are appropriate.
+- Do not create images/assets unless requested. Do not fabricate a product screenshot or workflow result.
+- Mention image size concerns in delivery; do not silently rewrite or compress existing binaries.
 
-```
-AI: README generation complete! Analyzing beautification opportunities...
+## Whitespace, hierarchy and density
 
-Found the following beautification suggestions:
+Use one H1, H2 for primary sections, H3 for steps; do not skip levels. Keep paragraphs short. Use lists for capabilities, tables for comparison/configuration, and fenced blocks for commands. Do not force every feature into a table. Avoid horizontal rules between every section.
 
-1. ✅ [Hero] Title centered → <h1 align="center">
-2. ✅ [Hero] Description centered and bold → <p align="center"><strong>
-3. ✅ [Hero] Add CTA buttons
-4. ✅ [Hero] Platform badges centered
-5. ⚪ [Content] Tables keep Markdown (easier to maintain)
-6. ⚪ [Code] Code blocks keep Markdown (has syntax highlighting)
+Keep install and first-use instructions visible, not inside `<details>`. Collapse only long optional output/advanced references for GitHub rendering, never for portable mode. Avoid wide tables, giant directory trees, and line-wrapped diagrams. Use depth-2/3 trees only when readers need navigation; link to folders when clearer.
 
-Accept these suggestions?
-[Accept All] [Confirm Each] [Reject All]
-```
+Use one consistent badge style. Keep identity badges in the Hero; put secondary technology details in prose or a concise table. Add AI IDE/platform badges only for real target-project integrations. Prefer the project's existing brand colors for approved visuals; never enforce white text on every colored background.
 
-**Legend:**
-- ✅ = Will be beautified (HTML)
-- ⚪ = Will remain as Markdown (no change needed)
+## Diagrams
 
----
+Include a diagram only when it makes a verified relationship easier to understand. Small CLIs, libraries, skills and docs-only projects do not automatically need architecture. Prefer 3–8 nodes, top-down flow on narrow screens, and short source-backed labels. Never derive edges solely from a directory tree.
 
-## Exception Handling
+Use Mermaid's diagram-specific syntax: flowcharts may use `classDef`; sequence diagrams should use native participant/message styling or theme defaults, not flowchart classes. Default themes are acceptable. Use dark fills with light text or light fills with dark text, checking contrast. Split/group a large graph or link existing detailed docs; do not automatically create SVG files because a node count threshold was crossed.
 
-1. **Transformation fails:** Keep original Markdown, log error
-2. **User rejects all:** Skip beautification entirely
-3. **Partial acceptance:** Apply only accepted transformations
-4. **Already beautified:** Check for `<!-- BEAUTIFIED -->` marker, skip if present
+## Design review
 
----
-
-## Quality Checks
-
-After beautification, verify:
-
-1. **GitHub rendering:** All HTML renders correctly
-2. **Content preservation:** No content was lost or changed
-3. **Link integrity:** All links still work
-4. **Badge visibility:** All badges display correctly
-5. **Language switcher:** All language links work
+Check the first screen, narrow-screen plausibility, badge count, image usefulness, code visibility, heading hierarchy, and maintenance readability. Respect compact/none/portable choices before aesthetic preferences. If no browser/GitHub render was performed, describe this as a source-level design review, not a screenshot-verified result.

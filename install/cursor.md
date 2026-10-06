@@ -17,7 +17,7 @@ cp SKILL.md .cursor/rules/general-readme.mdc
 3. Copy reference files:
 
 ```bash
-cp -r references/ .cursor/rules/references/
+cp -r references/ scripts/ .cursor/rules/
 ```
 
 ## Usage
