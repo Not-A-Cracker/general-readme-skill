@@ -1,614 +1,219 @@
-> **이 문서는 1.x 이전 가이드입니다. 2.0 절차는 [English](../README.md) 또는 [中文](README-zh.md)를 참고하세요. 아래의 이전 절차를 현재 실행 규칙으로 사용하지 마세요.**
-
 <h1 align="center">General README Skill</h1>
 <p align="center">
-  <strong>AI 코딩 어시스턴트를 사용하여 모든 프로젝트의 전문적인 README 파일 생성</strong>
+  <strong>AI 코딩 어시스턴트로 근거에 기반한 README를 작성하고 업데이트합니다</strong>
   <br />
-  <em>제로 의존성 · 멀티 플랫폼 · 다국어 지원 · Claude Code, Copilot, Cursor 등을 지원</em>
+  <em>v2.0.0 · 설정 확인 · Git 변경 기반 업데이트 · 멀티 플랫폼 · 다국어 지원</em>
 </p>
 
 <p align="center">
-  <a href="#빠른-시작"><img src="https://img.shields.io/badge/빠른_시작-4CAF50?style=for-the-badge" alt="Quick Start" /></a>
-  <a href="../LICENSE"><img src="https://img.shields.io/badge/라이선스-MIT-yellow?style=for-the-badge" alt="License: MIT" /></a>
+  <a href="#빠른-시작"><img src="https://img.shields.io/badge/빠른_시작-4CAF50?style=for-the-badge" alt="빠른 시작" /></a>
+  <a href="../LICENSE"><img src="https://img.shields.io/badge/라이선스-MIT-yellow?style=for-the-badge" alt="라이선스: MIT" /></a>
 </p>
 
 <p align="center">
-  <a href="https://docs.anthropic.com/en/docs/claude-code"><img src="https://img.shields.io/badge/Claude_Code-D97757?style=flat&logo=claude&logoColor=white" alt="Claude Code" /></a>
-  <a href="https://github.com/features/copilot"><img src="https://img.shields.io/badge/GitHub_Copilot-000000?style=flat&logo=github&logoColor=white" alt="GitHub Copilot" /></a>
-  <a href="https://cursor.sh"><img src="https://img.shields.io/badge/Cursor-000000?style=flat&logo=cursor&logoColor=white" alt="Cursor" /></a>
+  <a href="../install/claude-code.md"><img src="https://img.shields.io/badge/Claude_Code-D97757?style=flat&logo=claude&logoColor=white" alt="Claude Code 연동" /></a>
+  <a href="../install/copilot.md"><img src="https://img.shields.io/badge/GitHub_Copilot-000000?style=flat&logo=github&logoColor=white" alt="GitHub Copilot 연동" /></a>
+  <a href="../install/cursor.md"><img src="https://img.shields.io/badge/Cursor-000000?style=flat&logo=cursor&logoColor=white" alt="Cursor 연동" /></a>
 </p>
 
 <p align="center">
-  <a href="../README.md">English</a> · <a href="README-zh.md">中文</a> · <a href="README-ja.md">日本語</a> · <a href="README-ko.md">한국어</a> · <a href="README-ru.md">Русский</a>
+  <a href="../README.md">English</a> · <a href="README-zh.md">中文</a> · <a href="README-ja.md">日本語</a> · 한국어 · <a href="README-ru.md">Русский</a>
 </p>
 
 <p align="center">
-  <img src="intro.png" alt="General README Skill — AI 코딩 어시스턴트를 사용하여 모든 프로젝트의 전문적인 README 파일 생성" width="800" />
+  <img src="intro.png" alt="General README Skill — README 생성과 지원 플랫폼 연동 개요" width="800" />
 </p>
-
-## 기능
-
-| 기능 | 설명 |
-|---|---|
-| 다중 톤 지원 | 3가지 작성 프로파일: 에너제틱, 미니멀, 프로페셔널 |
-| 배지 시스템 | 3가지 비주얼 스타일로 shields.io 배지 자동 생성 |
-| 다국어 지원 | 영어, 중국어, 일본어, 한국어, 러시아어 등 README 파일 생성 |
-| 제로 의존성 | 외부 CLI, 런타임, 네트워크 서비스 불필요 |
-| 멀티 플랫폼 | Claude Code, GitHub Copilot, Cursor에서 작동 |
-| 개인정보 보호 | 민감한 키, 비밀번호, 개인 정보 자동 마스킹 |
-
-## 워크플로우 개요
-
-스킬은 **구성 → 스캔 → 생성 → 미화 → 출력** 파이프라인을 따릅니다:
-
-```mermaid
-graph LR
-    A[사용자<br/>트리거] --> B[단계 1<br/>구성]
-    B --> C[단계 2<br/>스캔]
-    C --> D[단계 3<br/>생성]
-    D --> E[단계 4<br/>미화]
-    E --> F[단계 5<br/>출력]
-    style A fill:#E6A23C,color:#fff
-    style B fill:#409EFF,color:#fff
-    style C fill:#67C23A,color:#fff
-    style D fill:#F56C6C,color:#fff
-    style E fill:#9B59B6,color:#fff
-    style F fill:#909399,color:#fff
-```
-
-## 단계 1: 구성
-
-생성 전에 구성 옵션을 수집합니다. 모든 옵션에는 고정된 기본값이 있습니다.
-
-### 1.1 톤 프로파일 선택
-
-README 작성 스타일 선택:
-
-| 프로파일 | 특징 | 레퍼런스 | 사용 사례 |
-|---|---|---|---|
-| **에너제틱** | 직접적, 자신감, 이모지 허용 | FastAPI | 오픈 소스, 개발자 도구 |
-| **미니멀** | 간결, 코드 우선, 불필요 없음 | Tailwind CSS | CLI 도구, 라이브러리 |
-| **프로페셔널** | 중립적, 구조화, 공식적 | Kubernetes | 엔터프라이즈, 문서 |
-
-**예시 — 같은 기능의 세 가지 톤:**
-
-<details>
-<summary><b>에너제틱 스타일</b></summary>
-
-```markdown
-## 기능
-
-- ⚡ **초고속** — 서브밀리초 응답 시간
-- 🔒 **기본 보안** — JWT 인증, CORS, 속도 제한 즉시 사용 가능
-- 🎯 **타입 안전** — 완전한 TypeScript 추론, `any` 제로
-```
-</details>
-
-<details>
-<summary><b>미니멀 스타일</b></summary>
-
-```markdown
-## 기능
-
-- 완전한 추론을 갖춘 타입 안전한 API
-- 제로 컨피그 TypeScript 지원
-- 내장 인증 및 속도 제한
-```
-</details>
-
-<details>
-<summary><b>프로페셔널 스타일</b></summary>
-
-```markdown
-## 기능
-
-| 기능 | 설명 |
-|---|---|
-| 타입 안전 | 제로 설정으로 완전한 TypeScript 추론 |
-| 인증 | 역할 기반 액세스 제어를 갖춘 JWT 기반 인증 |
-```
-</details>
-
-### 1.2 배지 스타일 선택
-
-shields.io 배지 모양 선택:
-
-| 스타일 | 매개변수 | 미리보기 |
-|---|---|---|
-| **플랫**（기본） | `style=flat` | ![Flat](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white) |
-| **플랫스퀘어** | `style=flat-square` | ![Flat-square](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white) |
-| **포더배지** | `style=for-the-badge` | ![For-the-badge](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white) |
-
-### 1.3 다국어 설정
-
-- **주요 언어**（기본: 영어）
-- **보조 언어**（선택: 중국어, 일본어, 한국어, 스페인어, 프랑스어, 러시아어 등）
-
-파일 명명은 ISO 639-1 코드를 따릅니다:
-
-| 언어 | 파일 | 코드 |
-|---|---|---|
-| 영어（주요） | `README.md` | — |
-| 중국어（간체） | `README-zh.md` | zh |
-| 일본어 | `README-ja.md` | ja |
-| 한국어 | `README-ko.md` | ko |
-| 러시아어 | `README-ru.md` | ru |
-
----
-
-## 단계 2: 프로젝트 스캔
-
-내장 도구를 사용하여 로컬 프로젝트 디렉토리를 스캔합니다. **정적 파일만 읽기 — 실행, 수정, 삭제는 하지 않습니다.**
-
-### 2.1 감지 파이프라인
-
-```mermaid
-graph TD
-    A[스캔 시작] --> B{매니페스트<br/>존재?}
-    B -->|예| C[매니페스트<br/>파싱]
-    B -->|아니오| D{의존성 파일<br/>존재?}
-    D -->|예| E[의존성<br/>파싱]
-    D -->|아니오| F[파일 확장자<br/>카운트]
-    C --> G[언어 &<br/>프레임워크]
-    E --> G
-    F --> G
-    G --> H[아키텍처<br/>타입]
-    H --> I[API 스타일]
-    I --> J[라이선스]
-    J --> K[프로젝트 타입]
-    style A fill:#E6A23C
-    style G fill:#409EFF
-    style K fill:#67C23A
-```
-
-### 2.2 감지 내용
-
-| 감지 항목 | 소스 파일 | 출력 |
-|---|---|---|
-| **언어** | package.json, pyproject.toml, go.mod, Cargo.toml | 주요 언어 |
-| **프레임워크** | dependencies/devDependencies 필드 | React, Vue, Express, Django 등 |
-| **빌드/CI** | Makefile, Dockerfile, .github/workflows | 빌드 명령, CI 파이프라인 |
-| **데이터베이스** | DATABASE_URL, ORM 설정 | PostgreSQL, Redis, Prisma 등 |
-| **아키텍처** | 디렉토리 구조, .proto 파일 | 마이크로서비스, 모놀리식 등 |
-| **API 스타일** | 라우트 파일, .proto, .graphql | REST, gRPC, GraphQL, WebSocket |
-| **라이선스** | LICENSE, LICENSE.md | MIT, Apache-2.0, GPL-3.0 등 |
-| **프로젝트 타입** | package.json scripts, bin 필드 | 라이브러리, 앱, CLI, 정적 사이트 |
-
-### 2.3 스캔 출력 예시
-
-典型的なNode.jsプロジェクト（`package.json`含む）の場合:
-
-```
-┌─ 언어: TypeScript
-├─ 프레임워크: Express, Prisma
-├─ 데이터베이스: PostgreSQL, Redis
-├─ 빌드: npm scripts, Docker
-├─ CI: GitHub Actions
-├─ API: REST
-├─ 라이선스: MIT
-└─ 타입: 애플리케이션
-```
-
----
-
-## 단계 3: 콘텐츠 생성
-
-레퍼런스 파일을 로드한 후 **고정 섹션 순서**（역 피라미드）에 따라 콘텐츠를 생성합니다.
-
-### 3.1 레퍼런스 파일
-
-모든 레퍼런스는 `references/` 폴더에 있습니다:
-
-| 파일 | 용도 |
-|---|---|
-| `tone-profiles.md` | 3가지 톤의 스타일 규칙과 샘플 문구 |
-| `badge-styles.md` | 배지 레이아웃 및 그룹화 규칙 |
-| `badges.md` | 기술 → shields.io 배지 URL 매핑（150+ 항목） |
-| `diagram-templates.md` | Mermaid 템플릿 + SVG 폴백 |
-| `section-guidelines.md` | 섹션 작성 규칙 및 금지 문구 |
-| `language-guide.md` | 다국어 명명 및 스위처 규칙 |
-
-### 3.2 고정 섹션 순서
-
-섹션은 이 순서로 생성됩니다. **일치하는 프로젝트 데이터가 없으면 섹션을 건너뜁니다.**
-
-```mermaid
-graph TD
-    A[1. 히어로] --> B[2. 기능]
-    B --> C[3. 빠른 시작]
-    C --> D[4. 사용법]
-    D --> E[5. 아키텍처]
-    E --> F[6. 설정]
-    F --> G[7. API]
-    G --> H[8. 디렉토리 구조]
-    H --> I[9. 기술 스택]
-    I --> J[10. 배포]
-    J --> K[11. 기여]
-    K --> L[12. 라이선스]
-    style A fill:#E6A23C
-    style B fill:#409EFF
-    style L fill:#67C23A
-```
-
-### 3.3 섹션 예시
-
-#### 히어로 섹션
-
-```markdown
-# 프로젝트 이름
-
-> 프로젝트가 무엇을 하는지 한 줄 설명
-
-![badge1](url)
-![badge2](url)
-```
-
-#### 기능 섹션（프로페셔널 톤）
-
-```markdown
-## 기능
-
-| 기능 | 설명 |
-|---|---|
-| 타입 안전 | 제로 설정으로 완전한 TypeScript 추론 |
-| 인증 | 역할 기반 액세스 제어를 갖춘 JWT 기반 인증 |
-```
-
-#### 빠른 시작 섹션
-
-````markdown
-## 빠른 시작
-
-### 사전 요구사항
-
-- Node.js 18+
-- PostgreSQL 14+
-
-### 설치
-
-```bash
-npm install my-package
-```
-
-### 설정
-
-```bash
-cp .env.example .env
-```
-
-### 실행
-
-```bash
-npm run dev
-```
-````
-
-#### 아키텍처 다이어그램
-
-````markdown
-## 아키텍처
-
-```mermaid
-graph LR
-    A[클라이언트<br/>React] --> B[API<br/>Express]
-    B --> C[인증<br/>JWT]
-    B --> D[데이터베이스<br/>PostgreSQL]
-```
-````
-
-#### 디렉토리 구조
-
-````markdown
-## 프로젝트 구조
-
-```
-src/
-├── api/              # API 라우트 핸들러
-├── services/         # 비즈니스 로직
-├── models/           # 데이터베이스 모델
-└── index.ts          # 진입점
-```
-````
-
-### 3.4 다이어그램 템플릿
-
-스킬에는 일반적인 아키텍처를 위한 사전 구축된 Mermaid 템플릿이 포함되어 있습니다:
-
-#### 마이크로서비스 아키텍처
-
-```mermaid
-graph LR
-    A[클라이언트<br/>React] --> B[API 게이트웨이<br/>Express]
-    B --> C[사용자<br/>서비스<br/>Go]
-    B --> D[주문<br/>서비스<br/>Go]
-    B --> E[결제<br/>서비스<br/>Go]
-    C --> F[(PostgreSQL)]
-    D --> F
-    E --> G[(Redis)]
-```
-
-#### 프론트엔드-백엔드 분리
-
-```mermaid
-graph LR
-    A[프론트엔드<br/>Vue.js] --> B[API 서버<br/>Express]
-    B --> C[인증 모듈<br/>JWT]
-    B --> D[비즈니스 로직<br/>TypeScript]
-    D --> E[(PostgreSQL)]
-    D --> F[(Redis)]
-```
-
-#### 모놀리식 레이어드
-
-```mermaid
-graph TD
-    A[UI 레이어<br/>React] --> B[컨트롤러 레이어<br/>Express]
-    B --> C[서비스 레이어<br/>TypeScript]
-    C --> D[데이터 레이어<br/>Prisma]
-    D --> E[(PostgreSQL)]
-```
-
-#### 이벤트 드리븐
-
-```mermaid
-graph LR
-    A[프로듀서<br/>Express] --> B[메시지 큐<br/>Kafka]
-    B --> C[컨슈머 A<br/>Go]
-    B --> D[컨슈머 B<br/>Python]
-    B --> E[컨슈머 C<br/>Node.js]
-    C --> F[(PostgreSQL)]
-    D --> G[(MongoDB)]
-    E --> H[(Redis)]
-```
-
-### 3.5 배지 그룹화 규칙
-
-배지는 다음 순서로 그룹화됩니다:
-
-| 행 | 내용 | 최대 수 |
-|---|---|---|
-| 행 1 — 아이덴티티 | 빌드 상태, 버전, 라이선스, 주요 언어 | 4 |
-| 행 2 — 기술 스택 | 프레임워크, 데이터베이스, 주요 도구 | 6 |
-| 행 3+ — 조건부 | 다운로드 수, 스타, 커버리지（데이터가 존재할 때만） | — |
-
-**예시:**
-
-```markdown
-![Build](https://img.shields.io/github/actions/workflow/status/user/repo/ci.yml)
-![Version](https://img.shields.io/npm/v/package)
-![License](https://img.shields.io/badge/license-MIT-green)
-![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)
-
-![React](https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=black)
-![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=node.js&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat&logo=postgresql&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)
-```
-
-### 3.6 핵심 생성 규칙
-
-1. **조작 금지** — 모든 기능, 명령, 코드 예시는 실제 프로젝트 파일에서 가져와야 함
-2. **스타일 일관성** — 모든 텍스트는 선택된 톤 프로파일을 따름
-3. **배지 규칙** — `badge-styles.md`의 그룹화 및 스타일을 따름
-4. **개인정보 보호** — 민감한 키, 비밀번호, 개인 정보를 마스킹
-5. **증분 업데이트** — `<!-- MANUAL-START -->` / `<!-- MANUAL-END -->`로 표시된 수동 콘텐츠를 유지
-
----
-
-## 단계 4: 미화 (자동 트리거)
-
-단계 3에서 README를 생성한 후, 이 단계가 자동으로 트리거되어 적절한 Markdown 구문을 HTML로 교체하여 시각적 표현을 향상시킵니다.
-
-### 4.1 실행 흐름
-
-**단계 1: 분석 (자동)**
-생성된 README를 스캔하고 미화 가능한 요소를 식별합니다.
-
-**단계 2: 확인 (사용자 상호작용)**
-사용자에게 미화 제안을 표시:
-
-```
-AI: README 생성 완료! 미화 기회를 분석 중...
-
-다음 미화 제안이 발견되었습니다:
-
-1. ✅ [히어로] 제목 중앙 정렬 → <h1 align="center">
-2. ✅ [히어로] 설명 중앙 정렬 굵게 → <p align="center"><strong>
-3. ✅ [히어로] CTA 버튼 추가
-4. ✅ [히어로] 플랫폼 배지 중앙 정렬
-5. ⚪ [콘텐츠] 테이블은 Markdown 유지 (유지 관리 용이)
-6. ⚪ [코드] 코드 블록은 Markdown 유지 (구문 강조 있음)
-
-이 제안을 수락하시겠습니까?
-[모두 수락] [개별 확인] [모두 거부]
-```
-
-**단계 3: 실행 (자동)**
-사용자 확인에 따라 미화를 적용합니다.
-
-### 4.2 미화 규칙
-
-| 영역 | 전략 | 이유 |
-|---|---|---|
-| **히어로** | 항상 미화 (HTML) | 시각적 향상이 뚜렷 |
-| **콘텐츠** | Markdown 유지 | 유지 관리 용이 |
-| **코드/다이어그램** | Markdown 유지 | 구문 강조 / GitHub 네이티브 지원 |
-| **구조** | Markdown 유지 | GitHub 스타일링으로 충분 |
-
-상세 규칙과 HTML 템플릿은 `references/beautification-rules.md`를 참조하세요.
-
----
-
-## 단계 5: 출력
-
-### 5.1 파일 생성
-
-1. 선택된 주요 언어로 `README.md` 생성
-2. 각 보조 언어의 `README-{lang}.md` 생성
-3. 모든 README 파일 상단에 언어 스위처 추가
-
-**언어 스위처 형식:**
-
-```html
-<p align="center">
-  <a href="README.md">English</a> · <a href="README-zh.md">中文</a> · <a href="README-ja.md">日本語</a> · <a href="README-ko.md">한국어</a> · <a href="README-ru.md">Русский</a>
-</p>
-```
-
-### 5.2 출력 형식
-
-- UTF-8 인코딩
-- 통일된 줄 바꿈（LF）
-- 섹션 간 깔끔한 빈 줄
-- 끝에 공백 없음
-
----
 
 ## 빠른 시작
 
-### Claude Code
+이 저장소(디렉터리 이름 `general-readme-skill`)는 두 가지 스킬을 제공합니다. **`readme-write`**는 README를 작성하고, **`readme-update`**는 Git 변경 사항에 맞춰 README를 최신 상태로 유지합니다. 핵심 워크플로는 에이전트의 기본 읽기·검색·편집 도구만 사용합니다. 선택 사항인 오프라인 검사기에는 **Python 3.9+**가 필요하며 서드파티 패키지는 필요하지 않습니다.
+
+### readme-write 설치
+
+`SKILL.md`, `references/`, `scripts/`를 함께 `readme-write`라는 이름의 스킬 디렉터리에 복사하세요. 상대 경로는 그대로 유지해야 하며, `SKILL.md`만 복사하면 워크플로가 불완전해집니다.
 
 ```bash
-mkdir -p .claude/skills/general-readme
-cp SKILL.md .claude/skills/general-readme/
-cp -r references/ .claude/skills/general-readme/
+mkdir -p .claude/skills/readme-write
+cp SKILL.md .claude/skills/readme-write/
+cp -r references/ scripts/ .claude/skills/readme-write/
 ```
 
-### GitHub Copilot
+다른 프로젝트에 설치할 때는 해당 프로젝트의 스킬 디렉터리를 절대 경로로 지정하고, 기존 팀 지침을 덮어쓰지 마세요. 연동 가이드: [Claude Code](../install/claude-code.md), [GitHub Copilot](../install/copilot.md), [Cursor](../install/cursor.md). 이 가이드는 파일 배치 방법을 설명하며, 실제 로딩은 설치된 호스트에서 확인해야 합니다. 자연어 호출이 가장 범용적입니다. `/readme-write`와 `/readme`는 트리거 문구이며 슬래시 명령으로 등록된다는 보장은 없습니다.
+
+### 첫 결과 얻기
+
+호스트 에이전트에게 다음과 같이 요청하세요.
+
+> README 작성해 줘
+
+첫 응답에서는 확정되지 않은 설정을 한 번에 묻고 **답변이 올 때까지 멈춥니다**. 선택 사항 또는 “추천 설정으로”라고 답하세요. 승인 후 에이전트는 정적인 프로젝트 근거를 조사하고, 합의한 README를 작성하며, 수행한 검사를 보고합니다.
+
+선택을 에이전트에게 명시적으로 맡기려면 다음과 같이 말하세요.
+
+> 묻지 말고 README를 생성해 줘. 영어, 개발자 대상, 균형 레이아웃, 나머지는 네가 정해.
+
+이 위임은 수동 작성 내용을 삭제하거나 프로젝트의 설치·실행 명령을 실행하도록 허용하는 것이 아닙니다.
+
+## 2.0의 변화
+
+| 사용자 불편 | 개선 내용 |
+|---|---|
+| 에이전트가 설정 확인을 잊는다 | 실제 답변이나 명시적 위임이 없으면 스캔도 생성도 하지 않는 진입 게이트 |
+| 보기 좋지만 동작하지 않는 설치 안내 | 명령, 작업 디렉터리, 첫 예제에는 프로젝트의 근거가 있어야 함 |
+| 모든 README가 똑같아 보인다 | 컴팩트·균형·쇼케이스 세 가지 레이아웃과 관련 배지만 사용 |
+| 다이어그램이 없거나 지어낸 것이다 | 모든 README에 소스에 근거한 플로차트 포함 |
+| 번역본이 서로 어긋난다 | 모든 언어판이 언어를 제외하고 완전히 동일 |
+| 업데이트가 맨 위나 맨 아래에 쌓인다 | 각 변경을 자연스럽게 속하는 위치에 배치 |
+| 업데이트가 관리자의 글을 지운다 | 짝을 이룬 관리 영역, 표시가 없는 글은 수동 작성으로 취급 |
+
+이 스킬들은 지침형이며 강제 실행 엔진이 아닙니다. 게이트와 평가 사례는 누락 위험을 줄여 주지만, 실제 준수 여부는 호스트 에이전트에서 검증해야 합니다.
+
+## 설정
+
+만능 템플릿을 받아들이는 대신, 각 항목을 독립적으로 선택합니다.
+
+| 설정 | 선택지 |
+|---|---|
+| 언어 | 주 언어와 실제로 필요한 번역만 |
+| 독자 | 사용자, 개발자 또는 기여자 |
+| 레이아웃 | 컴팩트, 균형 또는 쇼케이스 |
+| 분량 | 짧게, 표준 또는 상세 |
+| 톤 | 전문적, 미니멀 또는 에너제틱 |
+| 배지 | 없음, flat, flat-square 또는 for-the-badge |
+| 이미지 | 없음 또는 관련된 기존 자산, 플로차트는 항상 포함 |
+| 업데이트 방식 | 기본은 보존하고, 승인된 범위에서만 다시 작성 |
+| 렌더링 | GitHub 또는 이식 가능한 Markdown |
+| 이모지 | 명시적으로 요청하지 않으면 끔 |
+
+권장 출발점은 요청의 언어, 사용자, 균형, 표준, 전문적, flat, 기존 이미지, 보존, GitHub입니다. **권장은 동의가 아닙니다.** “예쁘게 만들어 줘”라는 요청을 모든 기본값에 대한 승인으로 해석해서는 안 됩니다. `--no-beautify`는 컴팩트 레이아웃만 선택하며, `--yes`, “用默认值”, “你决定”은 확정되지 않은 설정을 위임한다는 뜻입니다.
+
+## 독자를 위한 디자인
+
+| 레이아웃 | 적합한 대상 | 표현 방식 |
+|---|---|---|
+| **컴팩트** | 작은 라이브러리와 CLI | 왼쪽 정렬 Markdown, 코드를 일찍 제시, 배지는 최대 2개 |
+| **균형** | 대부분의 저장소 | 명확한 제목과 다음 단계, 배지는 최대 4개, 유용한 이미지 1장 |
+| **쇼케이스** | 실제 데모가 있는 제품 | 선택적인 가운데 정렬 Hero, 텍스트 링크, 실제 스크린샷 1장 |
+
+톤은 레이아웃과 별개입니다. 전문적이라고 가운데 정렬 HTML을 뜻하지 않으며, 에너제틱하다고 이모지를 뜻하지 않습니다. 실제 스크린샷은 도움이 되지만 가짜 UI는 그렇지 않습니다. 모든 레이아웃에 플로차트가 포함되며, 문서를 작성한 어시스턴트가 자동으로 지원 플랫폼 배지가 되지는 않습니다.
+
+## 워크플로
+
+`readme-write`는 **확인 → 조사 → 계획 → 작성 → 검증 → 전달** 순서로 진행합니다.
+
+```mermaid
+flowchart LR
+    A[설정 확인] --> B[프로젝트 근거 조사]
+    B --> C[독자의 흐름 계획]
+    C --> D[내용과 디자인 작성]
+    D --> E[사실, 링크, 일치 검증]
+    E --> F[모든 언어판 전달]
+    classDef step fill:#1e40af,stroke:#1e3a8a,color:#fff
+    class A,B,C,D,E,F step
+```
+
+1. **확인:** 한 번만 묻고 기다린 뒤, 확정된 설정을 요약합니다.
+2. **조사:** 매니페스트, 진입점, 예제, 테스트, 관련 설정을 읽습니다. 프로젝트 코드는 실행하지 않으며 실제 자격 증명도 읽지 않습니다.
+3. **계획:** 첫 성공까지의 경로, 플로차트, 정말 유용한 섹션만 고릅니다.
+4. **작성:** 하나의 표준 구조에서 모든 언어의 내용과 디자인을 함께 작성합니다.
+5. **검증:** 사실 근거, 링크, 앵커, 마커, 플로차트, 일치 여부를 확인합니다.
+6. **전달:** 합의한 파일만 편집하고, 실제로 수행한 검사를 보고합니다.
+
+진입점은 [`SKILL.md`](../SKILL.md)이며, 상세 프로토콜은 [`references/`](../references/)에 있습니다.
+
+## 업데이트 스킬
+
+보조 스킬 [`readme-update`](../side-skills/readme-update-skill/SKILL.md)(소스 디렉터리 `side-skills/readme-update-skill`)는 로컬 Git 변경 사항으로 기존 README를 업데이트합니다.
+
+```mermaid
+flowchart LR
+    U1[대상 버전 질문] --> U2[Git 변경 계층 조사]
+    U2 --> U3[변경을 섹션에 대응]
+    U3 --> U4[각 사실을 자연스러운 위치에 배치]
+    U4 --> U5[모든 언어판 동기화]
+    U5 --> U6[플로차트 갱신 및 검증]
+    classDef step fill:#047857,stroke:#065f46,color:#fff
+    class U1,U2,U3,U4,U5,U6 step
+```
+
+### readme-update 설치
+
+이 저장소의 루트에서, 프로젝트 수준 Claude Code 설치 예시입니다.
 
 ```bash
-mkdir -p .github
-cp SKILL.md .github/copilot-instructions.md
-cp -r references/ .github/copilot-instructions/references/
+mkdir -p .claude/skills/readme-update
+cp side-skills/readme-update-skill/SKILL.md .claude/skills/readme-update/
+cp -r side-skills/readme-update-skill/references side-skills/readme-update-skill/scripts .claude/skills/readme-update/
 ```
 
-### Cursor
+“README 업데이트해 줘” 또는 “update README”라고 요청하세요. 에이전트는 먼저 대상 프로젝트 버전을 묻고, 명시적인 **버전 유지** 선택지도 제시하며, 편집 전에 답변을 기다립니다. “你决定”으로는 이 확인을 건너뛸 수 없고, 이미 알려 준 버전은 다시 묻지 않습니다. 이후 로컬 읽기 전용 Git 명령으로 커밋된 변경, 스테이징된 변경, 스테이징되지 않은 변경, 추적되지 않는 변경을 조사하고, 독자에게 영향을 주는 변경을 해당 섹션에 대응시킵니다.
 
-```bash
-mkdir -p .cursor/rules
-cp SKILL.md .cursor/rules/general-readme.mdc
-cp -r references/ .cursor/rules/references/
-```
+각 변경은 **그것이 속한 섹션에 녹아들어**, 가장 가까운 항목 옆에 그 섹션의 기존 순서를 따라 배치됩니다. 쉽다는 이유로 맨 위나 맨 아래에 덧붙이지 않으며, 업데이트 로그도 추가하지 않습니다. 버전 범위는 기본적으로 README에 한정됩니다. 매니페스트 수정, 태그, 커밋, 릴리스는 하지 않습니다. 대체 Git 기준점은 주 README의 마지막 변경이며 휴리스틱임을 명시합니다. 자세한 내용은 [Git 프로토콜](../side-skills/readme-update-skill/references/git-delta.md), [버전 규칙](../side-skills/readme-update-skill/references/version-and-language-sync.md), [배치 규칙](../side-skills/readme-update-skill/references/placement-and-parity.md)을 참고하세요.
 
+## 언어 일치와 플로차트
+
+두 스킬이 작성하거나 업데이트하는 모든 README에는 다음 두 규칙이 적용됩니다.
+
+1. **항상 플로차트를 포함합니다.** 모든 README에는 소스에 근거한 실제 주요 흐름의 플로차트가 있습니다. 구성 요소 간 관계를 입증할 수 없으면, 검증된 설치, 설정, 실행, 결과 흐름을 그립니다. 이미지 없음 설정은 이미지만 제거하며 플로차트는 제거하지 않습니다.
+2. **모든 판이 동일합니다.** 모든 언어판의 섹션, 표, 코드 블록, 플로차트 노드와 연결, 링크, 이미지, 배지가 같습니다. 다른 것은 언어뿐이며, 특정 판에만 있는 내용은 남기지 않습니다.
+
+어긋난 판은 하나의 표준 구조로 맞추고, 아래의 검사기로 구조를 검증합니다. 일치 검사가 증명하는 것은 구조의 동일성뿐이며, 번역의 정확성은 사람이 읽고 확인해야 합니다.
+
+## 안전한 업데이트
+
+`readme-update`를 통한 유지보수에서, 실제 버전 결정은 표시가 없는 섹션에 대한 근거 있는 좁은 범위의 수정만 허용하며 다시 쓰기는 허용하지 않습니다. 명시적인 수동 블록과 관련 없는 내용은 계속 보호됩니다. 새로 생성하는 섹션에는 안정적인 짝 마커를 사용합니다.
+
+```markdown
+<!-- readme-skill:begin usage -->
 ## 사용법
 
-AI 코딩 어시스턴트에서 `/readme`를 입력하거나 "generate readme"라고 말하세요.
+프로젝트별 내용.
+<!-- readme-skill:end usage -->
+```
 
-### 지원 명령어
+마커 범위만 업데이트하고, 그 밖의 글과 명시적인 `MANUAL-START` / `MANUAL-END` 블록은 보존합니다. 표시가 없는 기존 섹션은 수동 작성으로 취급하며, 이전의 `AUTO-GENERATED`나 `BEAUTIFIED` 주석은 전체 덮어쓰기 허가가 아닙니다. 자세한 내용은 [근거와 업데이트 규칙](../references/evidence-and-updates.md)을 참고하세요.
 
-| 명령어 | 설명 |
+## 품질 검사
+
+이 저장소의 루트에서 코드를 실행하지 않고 대상 프로젝트를 검사합니다. 주 README를 먼저, 그다음 모든 번역을 나열하세요.
+
+```bash
+python3 scripts/check_readme.py --root /absolute/path/to/project --require-flowchart --parity /absolute/path/to/project/README.md /absolute/path/to/project/assets/README-zh.md
+```
+
+기계가 읽을 수 있는 보고서가 필요하면 `--json`을 추가하세요. `--preferences /path/to/preferences.json`은 사용자가 저장된 설정 기록을 허용한 경우에만 사용합니다. 검사기는 누락된 플로차트, 언어판 사이의 구조 차이, 존재하지 않는 로컬 경로와 앵커, 이미지 대체 텍스트 누락, 닫히지 않은 코드 펜스, 손상된 마커, 템플릿 잔여물, 신뢰도 높은 민감 값 형식, 일부 Mermaid 오류를 찾아냅니다. 종료 코드: `0`은 오류 없음, `1`은 검증 오류, `2`는 호출 또는 읽기 실패입니다.
+
+이것은 사용자의 실제 동의, 내용의 사실 정확성, 예제의 실행 가능성, 외부 링크의 접근성, 번역의 정확성, Mermaid 문법의 완전한 정확성, GitHub 렌더링 결과를 **증명하지 않습니다**. 자세한 내용은 [검사 범위와 한계](../references/quality-checks.md)를 참고하세요.
+
+### 회귀 테스트
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v
+```
+
+자동 테스트는 검사기, Git 변경 도구, 스킬 계약을 다룹니다. [`tests/behavior-cases.json`](../tests/behavior-cases.json)과 [`side-skills/readme-update-skill/tests/behavior-cases.json`](../side-skills/readme-update-skill/tests/behavior-cases.json)에는 실제 호스트 에이전트 평가를 위한 시나리오가 있습니다. 이는 평가 명세이며 모든 호스트가 통과했다는 주장이 아닙니다.
+
+## 개발 방향
+
+**설정의 신뢰성 → 믿을 수 있는 첫 경험 → 안전한 유지보수 → 동일한 언어판**을 우선합니다. 다음 반복에서 배지 매핑이나 더 큰 HTML 템플릿 추가를 주된 작업으로 삼지 마세요. 다음으로는 실제 호스트 에이전트에서 행동 시나리오를 실행하고, [디자인 평가 기준](../references/quality-checks.md#design-acceptance-rubric)을 사용해 대표적인 애플리케이션, 라이브러리, CLI, 모노레포의 실제 렌더링을 비교합니다.
+
+## 저장소 구성
+
+| 경로 | 용도 |
 |---|---|
-| `/readme` | README 생성 트리거 |
-| `generate readme` | 자연어 트리거 |
-| `write readme` | 자연어 트리거 |
-| `帮我写 README` | 중국어 트리거 |
-| `更新README` | 기존 README 업데이트 |
+| `SKILL.md` | `readme-write` 진입점과 필수 워크플로 |
+| `references/` | 설정 게이트, 근거, 섹션, 디자인, 다이어그램, 언어, 품질 검사 |
+| `scripts/check_readme.py` | 읽기 전용 오프라인 검사기 |
+| `side-skills/readme-update-skill/` | `readme-update` 스킬, 참고 문서, Git 변경 도구 |
+| `tests/` | 자동 검사와 행동 시나리오 |
+| `examples/` | 과거의 설명용 출력 예시이며 검증된 기준 데이터가 아님 |
+| `install/` | 호스트 연동 가이드 |
+| `assets/` | 아트워크와 번역된 README |
 
-### 세션 예시
+## 기여
 
-```
-사용자: /readme
-
-AI: README 작성 스타일을 선택하세요:
-    1. Professional（프로페셔널） — 기본
-    2. Energetic（에너제틱）
-    3. Minimal（미니멀）
-
-사용자: 1
-
-AI: 배지 스타일을 선택하세요:
-    1. Flat（플랫） — 기본
-    2. Flat-square（플랫스퀘어）
-    3. For-the-badge（포더배지）
-
-사용자: 1
-
-AI: 주요 언어를 선택하세요:
-    1. English（영어） — 기본
-    2. Chinese（중국어）
-
-사용자: 1
-
-AI: 보조 언어를 추가하시겠습니까?
-    [필요 없음] [중국어] [일본어] [한국어]
-
-사용자: 필요 없음
-
-AI: 프로젝트 구조를 스캔 중...
-    감지됨: TypeScript, Express, PostgreSQL
-    README.md 생성 중...
-    
-    ✅ README.md 생성 완료! 미화 기회를 분석 중...
-
-    다음 미화 제안이 발견되었습니다:
-
-    1. ✅ [히어로] 제목 중앙 정렬 → <h1 align="center">
-    2. ✅ [히어로] 설명 중앙 정렬 굵게 → <p align="center"><strong>
-    3. ✅ [히어로] CTA 버튼 추가
-    4. ✅ [히어로] 플랫폼 배지 중앙 정렬
-    5. ⚪ [콘텐츠] 테이블은 Markdown 유지 (유지 관리 용이)
-    6. ⚪ [코드] 코드 블록은 Markdown 유지 (구문 강조 있음)
-
-    이 제안을 수락하시겠습니까?
-    [모두 수락] [개별 확인] [모두 거부]
-
-사용자: 모두 수락
-
-AI: 미화 적용 중...
-    ✅ README.md가 생성되고 미화되었습니다! 확인하고 필요에 따라 조정하세요.
-```
-
-## 프로젝트 구조
-
-```
-general-readme-skill/
-├── SKILL.md                    # 메인 스킬 정의 파일
-├── LICENSE                     # MIT 라이선스
-├── README.md                   # 이 파일
-├── examples/                   # README 예제 파일
-│   ├── app-readme.md           # 풀스택 애플리케이션 예제
-│   ├── cli-readme.md           # CLI 도구 예제
-│   └── library-readme.md       # 라이브러리/패키지 예제
-├── install/                    # 설치 가이드
-│   ├── claude-code.md          # Claude Code 설정
-│   ├── copilot.md              # GitHub Copilot 설정
-│   └── cursor.md               # Cursor 설정
-└── references/                 # 참조 파일
-    ├── badges.md               # 기술 배지 매핑（150+ 항목）
-    ├── badge-styles.md         # 배지 레이아웃 규칙
-    ├── beautification-rules.md # 단계 4 미화 규칙 및 HTML 템플릿
-    ├── diagram-templates.md    # Mermaid + SVG 템플릿
-    ├── language-guide.md       # 다국어 규칙
-    ├── section-guidelines.md   # 섹션 작성 규칙
-    └── tone-profiles.md        # 3가지 작성 톤 정의
-```
-
-## 기술 스택
-
-### 문서
-
-| 기술 | 용도 |
-|---|---|
-| Markdown | 주요 콘텐츠 형식 |
-| shields.io | 배지 생성（150+ 기술 매핑） |
-| Mermaid | 아키텍처 다이어그램（4가지 템플릿 유형） |
-
-### 지원 플랫폼
-
-| 플랫폼 | 통합 방법 |
-|---|---|
-| Claude Code | `.claude/skills/` 디렉토리 |
-| GitHub Copilot | `.github/copilot-instructions.md` |
-| Cursor | `.cursor/rules/` 디렉토리 |
-
-## 기여하기
-
-1. 리포지토리를 포크
-2. 기능 브랜치 생성（`git checkout -b feature/amazing`）
-3. 변경 사항 커밋（`git commit -m 'feat: add amazing feature'`）
-4. 브랜치에 푸시（`git push origin feature/amazing`）
-5. Pull Request 열기
+워크플로 규칙을 바꿀 때는 관련 참고 문서를 업데이트하고 행동 시나리오를 추가하세요. 검사기를 바꿀 때는 통과와 실패 사례를 모두 추가하고 회귀 테스트를 실행하세요. 실제 호스트 실행 기록이 없는 시나리오를 호스트에서 검증되었다고 표시해서는 안 됩니다.
 
 ## 라이선스
 
-[MIT](LICENSE)
+[MIT](../LICENSE)

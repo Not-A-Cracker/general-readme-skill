@@ -61,6 +61,8 @@ Manual blocks inside a managed region remain intact. If a manual block contains 
 
 ## Existing README decision table
 
+For a Git-driven maintenance request routed to `readme-update`, actual version acceptance authorizes only narrow source-backed corrections of affected facts/current-version occurrences in unmarked sections. Preserve unrelated prose and design; do not regenerate whole sections or convert the document to managed content. Explicit manual blocks still require focused permission when a necessary correction is inside them. This exception is not whole-document rewrite authority and does not apply to general creation/redesign.
+
 | Existing state | Action |
 |---|---|
 | No README | Create confirmed output paths with per-section managed markers |

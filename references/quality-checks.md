@@ -12,10 +12,10 @@ Do not claim that a static script forces agent behavior or proves beauty, featur
 Use Python 3.9+ with no third-party packages. Resolve the script path relative to this installed skill, not the target repository. Supply the target root and one or more README paths explicitly:
 
 ```bash
-python3 /installed/skill/scripts/check_readme.py --root /target/project /target/project/README.md
+python3 /installed/skill/scripts/check_readme.py --root /target/project --require-flowchart --parity /target/project/README.md /target/project/assets/README-zh.md
 ```
 
-Optionally supply `--preferences /path/to/user-authorized-record.json` and `--json`. Never create a preferences file in the target repository just to run a check. The internal preference record can be checked manually instead.
+Always pass `--require-flowchart`. Pass `--parity` whenever more than one language edition exists, listing the primary first and every translation; omit it only for a single-language README. Optionally supply `--preferences /path/to/user-authorized-record.json` and `--json`. Never create a preferences file in the target repository just to run a check. The internal preference record can be checked manually instead.
 
 The checker reads only explicitly supplied documents and referenced local Markdown files. It does not run commands or access the network. It rejects paths escaping the project root, including symlink escapes. Documents over 2 MiB are rejected. Its supported Markdown subset includes backtick/tilde fences, ATX/setext headings, inline and reference links/images, HTML links/images/anchors, duplicate heading fragments, and paired managed/manual regions.
 
@@ -29,6 +29,8 @@ Checks include:
 - Mermaid block type presence and flowchart-only classes in sequence diagrams; **not full Mermaid syntax validation**.
 - Excessive Hero badges, duplicate H1, heading-level jumps, and preference/layout consistency when a record is supplied.
 - Equivalent managed ID sets across the supplied translation set when preferences specify translations.
+- `--require-flowchart`: every README has a Mermaid `flowchart`/`graph` block (a text flowchart with arrows only when the preference record says `renderer=portable`). A sequence/class/ER diagram does not satisfy it. It does not prove the flowchart is accurate.
+- `--parity`: each translation matches the first file in heading levels, table shapes, list-item count, code blocks (comments ignored), Mermaid skeleton (node IDs and edges, labels ignored), image/badge counts, local link targets, external links, HTML tag structure and managed IDs. It needs at least two files. Passing means structural identity only: it cannot read translated sentences, so facts and wording must still be reviewed.
 
 GitHub fragment generation is approximated for normal text, Unicode, inline formatting and duplicates. Complex inline HTML/entities/custom rendering may need an actual GitHub review. Unrecognized URI schemes and HTML features should be reviewed manually. Do not promise complete Markdown parsing, network reachability or zero false positives.
 
@@ -58,7 +60,8 @@ Score each dimension 0 (missing), 1 (needs work), or 2 (clear):
 | First result | Supported setup + example + observable result with no guessing |
 | Hierarchy | Short paragraphs, deliberate headings, useful—not repetitive—navigation |
 | Restraint | No padding, badge wall, invented diagram or duplicated tech inventory |
-| Visual value | Real, readable asset or useful diagram; absence is acceptable when unnecessary |
+| Visual value | A source-backed flowchart is always present and readable; images only when real and useful |
+| Language parity | Every edition has the same structure, code, flowchart and links; only language differs |
 | Maintenance | Clean Markdown body, safe updates, accurate relative links |
 
-Aim for 10/12 or better, but never use a score to override privacy, consent, evidence, or manual preservation. A source review can assess structure; actual appearance requires a real renderer. If no browser/GitHub rendering or runtime test was performed, explicitly say so in the delivery summary.
+Aim for 12/14 or better, but never use a score to override privacy, consent, evidence, or manual preservation. A source review can assess structure; actual appearance requires a real renderer. If no browser/GitHub rendering or runtime test was performed, explicitly say so in the delivery summary.

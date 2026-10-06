@@ -11,7 +11,7 @@ mkdir -p .cursor/rules
 2. Copy the skill file:
 
 ```bash
-cp SKILL.md .cursor/rules/general-readme.mdc
+cp SKILL.md .cursor/rules/readme-write.mdc
 ```
 
 3. Copy reference files:
@@ -19,6 +19,18 @@ cp SKILL.md .cursor/rules/general-readme.mdc
 ```bash
 cp -r references/ scripts/ .cursor/rules/
 ```
+
+## Update companion
+
+Keep the complete updater under the main rule's companion directory:
+
+```bash
+mkdir -p .cursor/rules/side-skills/readme-update-skill
+cp side-skills/readme-update-skill/SKILL.md .cursor/rules/side-skills/readme-update-skill/
+cp -r side-skills/readme-update-skill/references side-skills/readme-update-skill/scripts .cursor/rules/side-skills/readme-update-skill/
+```
+
+The main rule resolves Git-driven updates to this `SKILL.md`. Version confirmation or an explicit unchanged decision precedes edits; every existing language edition is inventoried. Verify actual rule loading in the host rather than assuming copied files prove integration.
 
 ## Usage
 

@@ -2,7 +2,21 @@
 
 Architecture diagram templates. Mermaid is the primary format — GitHub renders it natively. SVG is the fallback for complex architectures.
 
-Include a diagram only when confirmed visual preferences allow it and source-backed relationships help the intended reader. Skip diagrams for simple projects or unsupported relationships. Treat every example below as syntax/layout guidance, not target-project evidence. Default Mermaid themes are acceptable. Prefer 3–8 readable nodes; group or link detailed docs for larger graphs. Create SVG assets only when explicitly authorized.
+## Mandatory flowchart
+
+**Every README includes at least one flowchart**, regardless of project size, layout or the images preference. It shows the project's real primary flow and is derived from evidence, never invented:
+
+| Project | Flowchart shows |
+|---|---|
+| Application / service | Request or data flow between verified components |
+| CLI | Command pipeline: input → processing stages → output |
+| Library | Public API call flow from import to result |
+| Monorepo | Package interaction or startup order |
+| Agent skill / plugin / docs-only | Installation → invocation → interaction → result (the verified Quick Start) |
+
+When component relationships cannot be proven from imports, calls, routes or configuration, draw the verified reader workflow (install → configure → run → result) instead of guessing. Use `flowchart LR`/`TD` with 3–8 nodes and stable node IDs. Place it in its natural section (Workflow, Architecture or Usage). In `portable` output, use a fenced `text` flowchart with `-->` arrows. Every language edition has the same node IDs and edges; only labels are translated. Additional sequence, class, ER or state diagrams are optional extras, never substitutes.
+
+Treat every example below as syntax/layout guidance, not target-project evidence. Default Mermaid themes are acceptable. Prefer 3–8 readable nodes; group or link detailed docs for larger graphs. Create SVG assets only when explicitly authorized.
 
 ---
 
@@ -479,12 +493,13 @@ SVG nodes are positioned dynamically, not hardcoded.
 ## Decision Logic
 
 ```
-1. Check confirmed visuals/renderer preferences and the reader's need
-2. If relationships lack evidence or add no value → omit the diagram
-3. Select a diagram type that explains the actual interaction
-4. Extract source-backed names and edges; prefer 3–8 nodes
-5. Use valid diagram-specific syntax and readable default themes or restrained styling
-6. If too large → group/split or link existing detailed docs
-7. If portable rendering → use a concise prose explanation
+1. Always produce the mandatory flowchart (images preference "none" does not remove it)
+2. If component relationships lack evidence → draw the verified reader workflow from the Quick Start
+3. Extract source-backed names and edges; prefer 3–8 nodes with stable IDs
+4. Use valid flowchart syntax and readable default themes or restrained styling
+5. If too large → group/split or link existing detailed docs
+6. If portable rendering → use a fenced text flowchart with arrows
+7. Add sequence/class/ER/state diagrams only as optional extras
 8. Create SVG only with explicit approval of the asset path
+9. Reuse the same node IDs and edges in every language edition
 ```

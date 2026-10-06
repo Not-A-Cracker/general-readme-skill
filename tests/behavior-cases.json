@@ -37,7 +37,7 @@
   },
   {
     "id": "same-project-follow-up",
-    "conversation": [{"role": "user", "content": "本项目 README 用英文，面向开发者，简短，compact，专业，none 徽章，none 图片，preserve，portable，无 emoji，其余你决定"}, {"role": "user", "content": "继续更新本项目 README，加入新增导出函数"}],
+    "conversation": [{"role": "user", "content": "本项目 README 用英文，面向开发者，简短，compact，专业，none 徽章，none 图片，preserve，portable，无 emoji，其余你决定"}, {"role": "user", "content": "继续更新本项目 README，加入新增导出函数，版本不变"}],
     "must": ["Reuse the actual confirmed preferences for the same project", "Update only authorized API/generated regions"],
     "must_not": ["Ask all preferences again", "Add HTML, badges or Mermaid"]
   },
@@ -50,14 +50,14 @@
   {
     "id": "unmarked-update",
     "fixture": "Existing unmarked README with maintainer prose and custom install instructions",
-    "conversation": [{"role": "user", "content": "更新 README，用推荐配置"}],
-    "must": ["Treat unmarked text as manual", "Request focused replacement scope when necessary or add non-duplicate authorized content"],
+    "conversation": [{"role": "user", "content": "更新 README，用推荐配置，版本不变"}],
+    "must": ["Preserve unmarked unrelated prose and layout", "Apply only source-backed factual deltas after version acceptance; ask focused permission for protected manual blocks"],
     "must_not": ["Rewrite the whole document", "Append a duplicate Quick Start"]
   },
   {
     "id": "managed-manual-preservation",
     "fixture": "Paired usage managed region containing a MANUAL-START/MANUAL-END block; other prose outside the region",
-    "conversation": [{"role": "user", "content": "更新 usage 区域，其余你决定"}],
+    "conversation": [{"role": "user", "content": "更新 usage 区域，版本不变，其余你决定"}],
     "must": ["Keep manual block and all text outside the replaced region unchanged", "Use the same stable managed ID on repeated updates"],
     "must_not": ["Delete manual content", "Duplicate the region on a second update"]
   },
@@ -100,8 +100,35 @@
     "id": "no-fake-visuals",
     "fixture": "Application has no real screenshot, but an unrelated generic promotional image",
     "conversation": [{"role": "user", "content": "做展示型 README，其余你决定，只用现有真实素材"}],
-    "must": ["Use verified project-relevant visuals or honestly omit the screenshot"],
+    "must": ["Use verified project-relevant visuals or honestly omit the screenshot", "Still include the mandatory source-backed flowchart"],
     "must_not": ["Generate a fictional UI screenshot", "Insert AI-assistant platform badges unrelated to target integrations"]
+  },
+  {
+    "id": "flowchart-always-present",
+    "fixture": "Small single-file library with no architecture and the user chose no images and compact layout",
+    "conversation": [{"role": "user", "content": "生成 README，英文，面向开发者，简短，紧凑，不放徽章，不要图，其余按推荐"}],
+    "must": ["Include a flowchart of the public API call flow in its natural section", "Use Mermaid flowchart or graph with 3 to 8 evidence-based nodes", "Run the checker with --require-flowchart"],
+    "must_not": ["Treat the no-images choice as removing the flowchart", "Draw components that are not in the code", "Omit the flowchart because the project is small"]
+  },
+  {
+    "id": "portable-text-flowchart",
+    "fixture": "CLI project, user chose portable Markdown-only rendering",
+    "conversation": [{"role": "user", "content": "生成 README，中文，面向使用者，简短，纯 Markdown 可移植，其余按推荐"}],
+    "must": ["Use a fenced text flowchart with arrows instead of Mermaid"],
+    "must_not": ["Use Mermaid or HTML in portable output", "Skip the flowchart"]
+  },
+  {
+    "id": "all-languages-identical",
+    "fixture": "Project needs English, Chinese, Japanese README editions",
+    "conversation": [{"role": "user", "content": "生成 README，主语言英文，再生成中文和日文，面向开发者，均衡，其余按推荐"}],
+    "must": ["Write all editions in one pass from one canonical structure", "Keep identical section order, heading levels, tables, code blocks, flowchart node IDs and edges, links, images and badges", "Run the checker with --parity --require-flowchart over all editions, primary first"],
+    "must_not": ["Add or drop a section in one edition only", "Translate commands or node IDs", "Claim parity proves translation accuracy"]
+  },
+  {
+    "id": "skill-name-readme-write",
+    "conversation": [{"role": "user", "content": "/readme-write"}],
+    "must": ["Trigger the readme-write skill and ask the bundled preference question"],
+    "must_not": ["Look for a skill named general-readme-skill", "Generate before the user answers"]
   },
   {
     "id": "verification-honesty",

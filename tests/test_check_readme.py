@@ -17,7 +17,7 @@ SPEC.loader.exec_module(MODULE)
 
 class ReadmeChecks(unittest.TestCase):
     def setUp(self):
-        self.temp = tempfile.TemporaryDirectory(prefix=".readme-test-", dir=ROOT)
+        self.temp = tempfile.TemporaryDirectory(prefix="readme-test-")
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
 
@@ -166,6 +166,83 @@ class ReadmeChecks(unittest.TestCase):
     def test_valid_mermaid_flowchart(self):
         self.assertEqual(self.check("# Tool\n```mermaid\nflowchart TD\nA --> B\n```\n"), [])
 
+    def flow_check(self, content, preferences=None, name="README.md"):
+        checker = MODULE.Checker(self.root, preferences, require_flowchart=True)
+        checker.validate_preferences()
+        checker.check(self.write(name, content))
+        return checker.finish()
+
+    def test_required_flowchart_missing(self):
+        self.assertIn("missing-flowchart", self.codes(self.flow_check("# Tool\n\nNo diagram.\n")))
+
+    def test_required_flowchart_rejects_non_flow_diagram(self):
+        content = "# Tool\n```mermaid\nsequenceDiagram\nA->>B: Hello\n```\n"
+        self.assertIn("missing-flowchart", self.codes(self.flow_check(content)))
+
+    def test_required_flowchart_present(self):
+        self.assertEqual(self.flow_check("# Tool\n```mermaid\nflowchart LR\nA[Start] --> B[Done]\n```\n"), [])
+
+    def test_portable_text_flowchart(self):
+        content = "# Tool\n```text\nInstall --> Configure --> Run\n```\n"
+        self.assertEqual(self.flow_check(content, self.prefs(renderer="portable")), [])
+        self.assertIn("missing-flowchart", self.codes(self.flow_check(content)))
+
+    def test_no_images_does_not_forbid_flowchart(self):
+        content = "# Tool\n```mermaid\nflowchart LR\nA --> B\n```\n"
+        self.assertEqual(self.flow_check(content, self.prefs(visuals="none")), [])
+
+    def parity_check(self, documents, preferences=None):
+        checker = MODULE.Checker(self.root, preferences, parity=True)
+        checker.validate_preferences()
+        for name, content in documents.items():
+            checker.check(self.write(name, content))
+        return checker.finish()
+
+    PARITY_EN = (
+        "# Tool\n\n[Docs](docs/guide.md)\n\n## Quick Start\n\n```bash\nnpm install\n```\n\n"
+        "| Option | Meaning |\n|---|---|\n| a | b |\n\n```mermaid\nflowchart LR\n    A[Install] --> B[Run]\n```\n"
+    )
+
+    def parity_files(self):
+        self.write("docs/guide.md", "# Guide\n")
+
+    def test_parity_accepts_translation_with_same_structure(self):
+        self.parity_files()
+        zh = (
+            "# 工具\n\n[文档](../docs/guide.md)\n\n## 快速开始\n\n```bash\nnpm install\n```\n\n"
+            "| 选项 | 含义 |\n|---|---|\n| a | b |\n\n```mermaid\nflowchart LR\n    A[安装] --> B[运行]\n```\n"
+        )
+        self.assertEqual(self.parity_check({"README.md": self.PARITY_EN, "assets/README-zh.md": zh}), [])
+
+    def test_parity_detects_missing_section_table_command_and_flow_edge(self):
+        self.parity_files()
+        zh = (
+            "# 工具\n\n[文档](../docs/guide.md)\n\n```bash\nnpm ci\n```\n\n"
+            "| 选项 | 含义 |\n|---|---|\n| a | b |\n| c | d |\n\n```mermaid\nflowchart LR\n    A[安装] --> C[检查]\n```\n"
+        )
+        issues = self.parity_check({"README.md": self.PARITY_EN, "assets/README-zh.md": zh})
+        message = " ".join(issue.message for issue in issues if issue.code == "parity-mismatch")
+        for key in ("heading levels", "table shapes", "code/diagram blocks"):
+            self.assertIn(key, message)
+
+    def test_parity_detects_extra_link_and_image(self):
+        self.parity_files()
+        self.write("shot.png", "fixture")
+        zh = self.PARITY_EN.replace("# Tool", "# 工具").replace("[Docs](docs/guide.md)", "[文档](../docs/guide.md) ![截图](../shot.png)")
+        issues = self.parity_check({"README.md": self.PARITY_EN, "assets/README-zh.md": zh})
+        message = " ".join(issue.message for issue in issues if issue.code == "parity-mismatch")
+        self.assertIn("image count", message)
+        self.assertIn("local link targets", message)
+
+    def test_parity_allows_translated_sample_blocks(self):
+        self.parity_files()
+        en = "# Tool\n\n```markdown\n> Write a README for this project\n```\n\n```bash\nnpm install\n```\n"
+        zh = "# 工具\n\n```markdown\n> 帮我写 README\n```\n\n```bash\nnpm install\n```\n"
+        self.assertEqual(self.parity_check({"README.md": en, "assets/README-zh.md": zh}), [])
+
+    def test_parity_requires_multiple_editions(self):
+        self.assertIn("parity-inputs", self.codes(self.parity_check({"README.md": "# Tool\n"})))
+
     def test_preference_gate(self):
         issues = self.check("# Tool\n", self.prefs(status="asked"))
         self.assertIn("preference-gate", self.codes(issues))
@@ -242,6 +319,11 @@ class ReadmeChecks(unittest.TestCase):
 class SkillContract(unittest.TestCase):
     def test_entry_gate_and_reference_paths(self):
         content = (ROOT / "SKILL.md").read_text(encoding="utf-8")
+        self.assertIn("name: readme-write", content)
+        self.assertNotIn("name: general-readme-skill", content)
+        self.assertIn("Output invariants", content)
+        self.assertIn("Always include a flowchart", content)
+        self.assertIn("identical except the language", content)
         self.assertIn("version: 2.0.0", content)
         self.assertLess(content.index("Non-negotiable entry gate"), content.index("## Workflow"))
         self.assertIn("End the turn and wait", content)

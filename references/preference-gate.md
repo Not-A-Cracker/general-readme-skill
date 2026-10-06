@@ -2,6 +2,8 @@
 
 ## Required behavior
 
+Apply this design/creation gate only after `SKILL.md` update routing. For Git-driven maintenance owned by `readme-update`, preserve existing design and use its mandatory version gate instead. Never waive the version question through general design delegation. Combine unresolved design and version questions only when creation/redesign is also requested; do not recursively restart the main workflow.
+
 Treat preference resolution as a state transition, not a courtesy question:
 
 `UNRESOLVED → ASKED → CONFIRMED → GENERATE`
@@ -17,7 +19,7 @@ Adapt to the user's language and already supplied choices. For a Chinese request
 > 生成前先确认偏好，可以一句话回答：
 > - 语言：中文 / 英文 / 双语（推荐中文，不加翻译）。
 > - 读者与篇幅：使用者 / 开发者 / 贡献者；简短 / 标准 / 详细（推荐使用者、标准）。
-> - 视觉：紧凑纯 Markdown / 均衡 / 展示型（推荐均衡，只用已有的真实图片）。
+> - 视觉：紧凑纯 Markdown / 均衡 / 展示型（推荐均衡，只用已有的真实图片；流程图始终包含，各语言版内容保持一致）。
 > - 语气与徽章：专业 / 简约 / 活力；不放 / flat / flat-square / 大号（推荐专业、flat，无 emoji）。
 > 其他推荐：GitHub 渲染、保留已有手写内容。回复“用推荐配置”即可；也可以说“英文、面向开发者、简短、纯 Markdown、不要徽章，其余按推荐”。
 
@@ -58,7 +60,7 @@ Interpret legacy options as follows:
 |---|---|
 | `--yes`, "不要问", "其余你决定" | Delegate unresolved preferences, not overwrite/safety permissions |
 | `--no-beautify`, "纯 Markdown" | Set compact layout; do not insert HTML Hero or CTA badges |
-| "不要图" | Set visuals=none; do not add decorative diagrams |
+| "不要图" | Set visuals=none: no images or extra diagrams; the mandatory flowchart is still included |
 | "美观", "专业一点" | Resolve only the clearly stated tone; still ask about unresolved preferences |
 | "重写整个 README" | Set rewrite mode within the requested README scope; keep explicit manual blocks |
 | "更新 README" | Keep preserve mode; do not infer rewrite authorization |

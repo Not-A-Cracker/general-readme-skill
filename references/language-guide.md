@@ -34,9 +34,22 @@ For nested Chinese translations linking to a root English README, calculate path
 
 Do not reuse root-relative image/license URLs blindly. Use the current file's parent as the base for images, docs, source paths and translations.
 
+## Parity contract (mandatory)
+
+Every language edition is the same document in a different language. Allowed differences: translated prose, headings, table cell text, link labels, image alt text, badge labels, flowchart node labels and code comments, plus paths/fragments recomputed for the file's own directory. Everything else must be identical in every edition:
+
+- Section order and heading levels; no section exists in only one edition.
+- Tables: same rows and columns. Lists: same items in the same order.
+- Code blocks and commands, file names, flags and version literals. Executable blocks (`bash`, `json`, `yaml`, source languages) are byte-identical in every edition; non-executable illustrative samples keep the same count and meaning.
+- Flowchart node IDs and edges (only labels translate), and any other diagram structure.
+- Links and their targets, images, badges (count, style, destination) and HTML structure.
+- Managed-region IDs, manual blocks (translate the text, keep the block) and facts, numbers and counts.
+
+Write all editions in one pass from a single canonical structure. When a fact changes, change it in every edition at the same position. If editions have already diverged, treat the verified union of facts as canonical and bring every edition to the same structure; never keep an edition-specific section. After writing, run `scripts/check_readme.py --parity --require-flowchart` over the primary and all translations (primary first). Parity passing means structure is identical; it does not prove translation accuracy, so still read the translated prose.
+
 ## Translation rules
 
-- Keep equivalent facts, section order, code examples and managed-region IDs across translated generated sections. Do not reorder or translate preserved manual content without permission.
+- Keep equivalent facts, section order, code examples and managed-region IDs across translated generated sections. Localize example utterances, prompts and non-executable samples into each edition's own language with the same count and meaning. Do not reorder or translate preserved manual content without permission.
 - Translate headings and prose naturally; do not translate commands, imports, filenames, options, variables, route paths or executable string literals.
 - Keep community-standard technical terms where appropriate. Translate descriptive alt text when useful.
 - Recalculate local heading fragments after translation. `#quick-start` does not target `## 快速开始`; use its actual fragment or a supported explicit anchor in GitHub-only layouts.

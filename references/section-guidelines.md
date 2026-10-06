@@ -21,9 +21,9 @@ Use sections as a reader journey, not a mandatory checklist. Apply the confirmed
 | CLI | Installation, executable name, one real invocation, documented output | Options table, troubleshooting, shell compatibility |
 | Monorepo | Package map, required services, root/package working directories | Separate package links instead of exhaustive APIs |
 | Agent skill / plugin | Installation scope, actual entry point/invocation, expected interaction | Integration adapters and host limitations |
-| Docs-only | Purpose, entry pages, navigation, how to use/contribute | No invented runtime or diagram |
+| Docs-only | Purpose, entry pages, navigation, how to use/contribute | No invented runtime; the flowchart shows how to use the material |
 
-Order Hero → first result → capabilities/usage → reference → maintainer links by default. Move capabilities before first result when readers need context. Keep quick-start early; never move manual sections just to impose this order.
+Order Hero → first result → capabilities/usage → workflow flowchart → reference → maintainer links by default. Every language edition uses the identical order. Move capabilities before first result when readers need context. Keep quick-start early; never move manual sections just to impose this order.
 
 ## Hero
 
@@ -48,9 +48,9 @@ Aim for a few logical steps without a fixed command ceiling. State directory con
 
 Start with one real example from implementation/tests/examples and add up to three advanced cases when needed. Keep imports, options, API keys and return shape accurate. Use fenced blocks with language hints. Preserve executable code and explain necessary user-supplied values; do not use unfinished `xxx` or invented API methods.
 
-## Architecture / Workflow
+## Workflow / Architecture (required)
 
-Include only if the reader benefits and component relationships are verified. Prefer a small flowchart for a pipeline and a sequence diagram for a specific interaction; a function library need not have a class diagram. Read `diagram-templates.md` only when needed. Default Mermaid themes are acceptable; diagram-specific syntax takes priority over styling. Use prose for portable rendering. Do not create an SVG asset without authorization.
+Every README has this section, or places the flowchart in the section where it naturally explains the project (Usage for a library, Quick Start for a skill). The flowchart shows the real primary flow, derived from verified relationships; when relationships cannot be proven, it shows the verified install → configure → run → result workflow. Add a one-sentence lead-in only if the tone allows. A sequence diagram may supplement it for a specific interaction; a function library need not have a class diagram. Read `diagram-templates.md` for the required rules. Default Mermaid themes are acceptable; diagram-specific syntax takes priority over styling. Use a fenced text flowchart for portable rendering. Do not create an SVG asset without authorization.
 
 ## Configuration
 

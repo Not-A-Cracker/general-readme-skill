@@ -8,7 +8,7 @@ import re
 import sys
 import unicodedata
 from collections import Counter
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlsplit
@@ -59,6 +59,11 @@ class Document:
     blocks: list
     anchors: set
     managed_ids: set
+    levels: list = field(default_factory=list)
+    local_targets: list = field(default_factory=list)
+    external_links: list = field(default_factory=list)
+    badge_count: int = 0
+    fingerprint: dict = field(default_factory=dict)
 
 
 def slug(text):
@@ -74,6 +79,62 @@ def slug(text):
 
 def normalize_reference(label):
     return " ".join(label.split()).casefold()
+
+
+SCRIPT_LANGUAGES = {
+    "bash", "sh", "shell", "zsh", "console", "powershell", "cmd", "json",
+    "yaml", "yml", "toml", "python", "javascript", "typescript", "js", "ts",
+}
+FLOW_START = re.compile(r"^(?:graph|flowchart)\b")
+FLOW_ARROW = re.compile(r"-->|->|\u2192")
+
+
+def mermaid_clean(body):
+    clean = re.sub(r"%%\{.*?\}%%", "", body, flags=re.S)
+    statements = [s.strip() for s in clean.splitlines() if s.strip() and not s.lstrip().startswith("%%")]
+    return clean, (statements[0] if statements else "")
+
+
+def mermaid_skeleton(body):
+    text = re.sub(r"%%.*", "", body)
+    text = re.sub(r"\[\(.*?\)\]|\[\[.*?\]\]|\[.*?\]|\(\(.*?\)\)|\(.*?\)|\{.*?\}|\|.*?\||\".*?\"", "", text)
+    return " ".join(text.split())
+
+
+def table_shapes(prose):
+    shapes, run = [], []
+    for line in prose.splitlines() + [""]:
+        if line.lstrip().startswith("|"):
+            run.append(line)
+        elif run:
+            cells = re.split(r"(?<!\\)\|", run[0].strip().strip("|"))
+            shapes.append((len(run), len(cells)))
+            run = []
+    return shapes
+
+
+def fence_signature(blocks):
+    result = []
+    for _, language, body in blocks:
+        lang = language.casefold()
+        if lang == "mermaid":
+            result.append(("mermaid", mermaid_skeleton(body)))
+        elif lang in SCRIPT_LANGUAGES:
+            lines = [item.strip() for item in body.splitlines() if item.strip() and not item.strip().startswith("#")]
+            result.append((lang, "\n".join(lines)))
+        else:
+            result.append((lang, None))
+    return result
+
+
+def has_flowchart(blocks, portable):
+    for _, language, body in blocks:
+        lang = language.casefold()
+        if lang == "mermaid" and FLOW_START.match(mermaid_clean(body)[1]):
+            return True
+        if portable and lang in {"text", "ascii", ""} and len(FLOW_ARROW.findall(body)) >= 2:
+            return True
+    return False
 
 
 def html_source(prose):
@@ -124,9 +185,11 @@ class Elements(HTMLParser):
 
 
 class Checker:
-    def __init__(self, root, preferences=None):
+    def __init__(self, root, preferences=None, require_flowchart=False, parity=False):
         self.root = Path(root).resolve()
         self.preferences = preferences
+        self.require_flowchart = require_flowchart
+        self.parity = parity
         self.issues = []
         self.documents = {}
         self.checked = []
@@ -255,7 +318,7 @@ class Checker:
         if len(h1s) != 1:
             self.add("warning", "title-count", resolved, 1, "Expected exactly one H1 title.")
         ids = self.check_markers(resolved, prose)
-        doc = Document(resolved, raw, prose, blocks, anchors, ids)
+        doc = Document(resolved, raw, prose, blocks, anchors, ids, [level for _, level, _ in sorted(headings)])
         self.documents[resolved] = doc
         return doc
 
@@ -311,6 +374,10 @@ class Checker:
             self.add("error", "unsafe-link", doc.path, line, "Unsafe or non-portable URI scheme.")
             return
         if parts.scheme or parts.netloc:
+            if "img.shields.io" in parts.netloc.casefold():
+                doc.badge_count += 1
+            else:
+                doc.external_links.append(target)
             return
         local = unquote(parts.path)
         if local.startswith("/"):
@@ -323,6 +390,7 @@ class Checker:
         if not candidate.exists():
             self.add("error", "missing-local-link", doc.path, line, "Local target does not exist: " + local)
             return
+        doc.local_targets.append(candidate.relative_to(self.root).as_posix())
         if parts.fragment and (not local or candidate.suffix.lower() in {".md", ".markdown"}):
             linked = doc if candidate == doc.path else self.load(candidate)
             if linked and unquote(parts.fragment) not in linked.anchors:
@@ -376,9 +444,7 @@ class Checker:
         for line, language, body in doc.blocks:
             if language.casefold() != "mermaid":
                 continue
-            clean = re.sub(r"%%\{.*?\}%%", "", body, flags=re.S)
-            statements = [s.strip() for s in clean.splitlines() if s.strip() and not s.lstrip().startswith("%%")]
-            first = statements[0] if statements else ""
+            clean, first = mermaid_clean(body)
             if not re.match(r"^(?:graph|flowchart|sequenceDiagram|classDiagram|erDiagram|stateDiagram(?:-v2)?|pie|gantt|journey|gitGraph|mindmap|timeline|quadrantChart|xychart-beta|block-beta|architecture-beta|packet-beta|sankey-beta|requirementDiagram|C4Context|C4Container|C4Component)\b", first):
                 self.add("error", "mermaid-type", doc.path, line, "Mermaid block lacks a supported diagram declaration.")
             if first.startswith("sequenceDiagram") and re.search(r"^\s*class(?:Def)?\s", clean, re.M):
@@ -402,12 +468,26 @@ class Checker:
                 style = parse_qs(query).get("style", ["flat"])[0]
                 if style != prefs["badge_style"]:
                     self.add("error", "preference-badges", doc.path, line, "Badge style differs from confirmed preferences.")
-        if prefs.get("visuals") == "none" and (len(images) > len(badges) or any(language.casefold() == "mermaid" for _, language, _ in doc.blocks)):
-            self.add("error", "preference-visuals", doc.path, 1, "Visuals conflict with visuals=none.")
+        if prefs.get("visuals") == "none" and len(images) > len(badges):
+            self.add("error", "preference-visuals", doc.path, 1, "Images conflict with visuals=none (the required flowchart is exempt).")
         if prefs.get("renderer") == "portable" and (parser.tags or any(language.casefold() == "mermaid" for _, language, _ in doc.blocks)):
             self.add("error", "preference-portable", doc.path, 1, "HTML/Mermaid conflicts with portable output.")
         if prefs.get("layout") == "compact" and any(tag.startswith("h") or (attrs.get("align") == "center") for tag, attrs, _ in parser.tags):
             self.add("error", "preference-layout", doc.path, 1, "HTML Hero conflicts with compact layout.")
+        if self.require_flowchart and not has_flowchart(doc.blocks, prefs.get("renderer") == "portable"):
+            self.add("error", "missing-flowchart", doc.path, 1, "A source-backed flowchart is required (Mermaid flowchart/graph; text flowchart only for portable output).")
+        doc.fingerprint = {
+            "heading levels": doc.levels,
+            "table shapes": table_shapes(doc.prose),
+            "list items": len(re.findall(r"^\s*(?:[-*+]|\d+[.)])\s+\S", doc.prose, re.M)),
+            "code/diagram blocks": fence_signature(doc.blocks),
+            "image count": len(images),
+            "badge count": doc.badge_count,
+            "local link targets": sorted(doc.local_targets),
+            "external links": sorted(doc.external_links),
+            "html tags": sorted(Counter(tag for tag, _, _ in parser.tags).items()),
+            "managed ids": sorted(doc.managed_ids),
+        }
 
     def finish(self):
         prefs = self.preferences or {}
@@ -418,6 +498,15 @@ class Checker:
                     self.add("error", "translation-regions", doc.path, 1, "Managed region IDs differ across the supplied translation set.")
         if prefs.get("secondary_languages") and len(self.checked) < 1 + len(prefs["secondary_languages"]):
             self.add("warning", "translation-coverage", self.root, 0, "Not all requested translations were supplied for checking.")
+        if self.parity:
+            if len(self.checked) < 2:
+                self.add("error", "parity-inputs", self.root, 0, "Parity checking needs the complete set of two or more language editions.")
+            else:
+                primary = self.checked[0]
+                for doc in self.checked[1:]:
+                    differing = [key for key, value in primary.fingerprint.items() if doc.fingerprint.get(key) != value]
+                    if differing:
+                        self.add("error", "parity-mismatch", doc.path, 1, "Structure differs from " + primary.path.name + " in: " + ", ".join(differing))
         return self.issues
 
 
@@ -426,6 +515,8 @@ def main(argv=None):
     parser.add_argument("--root", required=True, type=Path, help="Target repository root")
     parser.add_argument("--preferences", type=Path, help="Optional user-authorized preference record")
     parser.add_argument("--json", action="store_true", help="Emit a machine-readable report")
+    parser.add_argument("--require-flowchart", action="store_true", help="Require a flowchart in every checked README")
+    parser.add_argument("--parity", action="store_true", help="Require identical structure across all supplied language editions")
     parser.add_argument("readmes", nargs="+", type=Path)
     args = parser.parse_args(argv)
     if not args.root.is_dir():
@@ -438,7 +529,7 @@ def main(argv=None):
             prefs = json.loads(args.preferences.read_text(encoding="utf-8"))
         except (OSError, ValueError, UnicodeError) as exc:
             parser.error("Cannot read preferences: " + str(exc))
-    checker = Checker(args.root, prefs)
+    checker = Checker(args.root, prefs, args.require_flowchart, args.parity)
     checker.validate_preferences()
     for path in args.readmes:
         checker.check(path if path.is_absolute() else args.root / path)
@@ -446,7 +537,7 @@ def main(argv=None):
     errors = sum(issue.severity == "error" for issue in issues)
     warnings = sum(issue.severity == "warning" for issue in issues)
     if args.json:
-        print(json.dumps({"errors": errors, "warnings": warnings, "issues": [asdict(issue) for issue in issues], "limitations": ["offline static checks only", "no command execution", "no network or rendering", "no proof of user consent"]}, ensure_ascii=False, indent=2))
+        print(json.dumps({"errors": errors, "warnings": warnings, "issues": [asdict(issue) for issue in issues], "limitations": ["offline static checks only", "no command execution", "no network or rendering", "no proof of user consent", "structural parity does not prove translation accuracy"]}, ensure_ascii=False, indent=2))
     else:
         for issue in issues:
             print(f"{issue.severity.upper()} {issue.code} {issue.path}:{issue.line}: {issue.message}")

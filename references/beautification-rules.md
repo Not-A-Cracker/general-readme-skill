@@ -6,9 +6,9 @@ Compose content and visual hierarchy together after preference confirmation. Do 
 
 | Preset | Hero | Navigation | Visuals | Badge budget |
 |---|---|---|---|---|
-| compact | Markdown H1 + one sentence | Usually unnecessary | No decorative images; only essential user-requested visuals | 0–2 |
-| balanced | Markdown H1 + short description | Plain text links when the document is long | One real screenshot or explanatory diagram when useful | 0–4 |
-| showcase | Optional centered HTML title/description | 1–2 plain-text action links | One real product/demo image, optionally a useful diagram later | 0–4 |
+| compact | Markdown H1 + one sentence | Usually unnecessary | No decorative images; the mandatory flowchart only | 0–2 |
+| balanced | Markdown H1 + short description | Plain text links when the document is long | Mandatory flowchart plus one real screenshot when useful | 0–4 |
+| showcase | Optional centered HTML title/description | 1–2 plain-text action links | Mandatory flowchart plus one real product/demo image | 0–4 |
 
 Apply `renderer=portable` as Markdown-only, even with showcase spacing. Keep tone independent: professional does not mean centered, and energetic does not mean emoji. Use no emoji unless requested.
 
@@ -72,7 +72,7 @@ Use one consistent badge style. Keep identity badges in the Hero; put secondary 
 
 ## Diagrams
 
-Include a diagram only when it makes a verified relationship easier to understand. Small CLIs, libraries, skills and docs-only projects do not automatically need architecture. Prefer 3–8 nodes, top-down flow on narrow screens, and short source-backed labels. Never derive edges solely from a directory tree.
+Every layout, including compact, contains at least one flowchart of the real primary flow (see `diagram-templates.md`); no image preference removes it. Other diagram types are optional extras that need verified relationships. Prefer 3–8 nodes, top-down flow on narrow screens, and short source-backed labels. Never derive edges solely from a directory tree, and keep node IDs and edges identical across language editions.
 
 Use Mermaid's diagram-specific syntax: flowcharts may use `classDef`; sequence diagrams should use native participant/message styling or theme defaults, not flowchart classes. Default themes are acceptable. Use dark fills with light text or light fills with dark text, checking contrast. Split/group a large graph or link existing detailed docs; do not automatically create SVG files because a node count threshold was crossed.
 

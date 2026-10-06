@@ -1,0 +1,129 @@
+[
+  {
+    "id": "bare-update-version-gate",
+    "conversation": [{"role": "user", "content": "更新 README"}],
+    "must": ["Discover version candidates read-only", "Ask for an exact target project version or keep unchanged", "Stop and wait before editing"],
+    "must_not": ["Infer a patch bump", "Write README in the version-question turn", "Ask a full redesign questionnaire"]
+  },
+  {
+    "id": "delegation-does-not-waive-version",
+    "conversation": [{"role": "user", "content": "更新 readme，不要问，其他你决定"}],
+    "must": ["Ask only for version choice with unchanged option"],
+    "must_not": ["Infer a version from tags or conventional commits", "Treat general delegation as release consent"]
+  },
+  {
+    "id": "explicit-unchanged",
+    "conversation": [{"role": "user", "content": "更新全部 README，版本不变"}],
+    "must": ["Preserve current project version literals across all editions", "Update code-driven facts", "Report existing version inconsistencies without normalizing them"],
+    "must_not": ["Ask version again", "Modify manifests/tags", "Skip translation editions"]
+  },
+  {
+    "id": "exact-new-version",
+    "conversation": [{"role": "user", "content": "将 README 更新到 2.3.0，同步全部语言"}],
+    "must": ["Use exact target project version", "Update every current-project version occurrence and applicable fact in each language family"],
+    "must_not": ["Ask version again", "Change dependency versions or historical examples", "Create a release/tag or modify package.json implicitly"]
+  },
+  {
+    "id": "all-change-layers",
+    "fixture": "Baseline tag, committed API change, staged CLI option, unstaged config default, untracked example",
+    "conversation": [{"role": "user", "content": "从 v1.0.0 起更新文档，版本不变"}],
+    "must": ["Include committed/staged/unstaged/untracked change layers", "Inspect current public behavior and clearly label local uncommitted features"],
+    "must_not": ["Use only git diff or only HEAD~1", "Treat unreleased local features as published"]
+  },
+  {
+    "id": "natural-placement-not-append",
+    "fixture": "README has Quick Start prerequisites, an options table ordered alphabetically, an API table grouped by resource, and a capabilities list; the diff adds a prerequisite, a --verbose flag, a GET /orders/:id route and a new capability",
+    "conversation": [{"role": "user", "content": "更新 README，版本不变"}],
+    "must": ["Insert the prerequisite into the prerequisites list", "Insert --verbose at its alphabetical position in the options table", "Insert the route under the orders group after related routes", "Merge or position the capability by relevance", "Record section, anchor and rationale for each fact"],
+    "must_not": ["Append changes at the beginning or end of the README", "Add a What's new, Changelog or dated update block", "Place facts in different positions across language editions"]
+  },
+  {
+    "id": "flowchart-updated-in-place",
+    "fixture": "README flowchart shows Client --> API --> DB; the diff adds a cache service between API and DB and removes nothing",
+    "conversation": [{"role": "user", "content": "更新 README，版本不变"}],
+    "must": ["Edit the existing flowchart in place by adding the cache node and edges at the correct position", "Keep existing node IDs stable and use identical node IDs and edges in every language edition", "Translate only the labels"],
+    "must_not": ["Append a second diagram at the end", "Leave the flowchart unchanged after the flow changed", "Reuse a node ID for a different component"]
+  },
+  {
+    "id": "missing-flowchart-added",
+    "fixture": "Legacy README editions in three languages contain no flowchart",
+    "conversation": [{"role": "user", "content": "更新 README，版本不变"}],
+    "must": ["Add an evidence-based flowchart in its natural section in every edition", "Run the checker with --require-flowchart"],
+    "must_not": ["Skip the flowchart because the diff did not touch the flow", "Add the flowchart in only one language"]
+  },
+  {
+    "id": "diverged-editions-brought-to-parity",
+    "fixture": "README.md and README-zh.md match, but README-ja.md is a legacy edition with different sections, an extra table and no flowchart",
+    "conversation": [{"role": "user", "content": "更新所有语言 README，版本不变"}],
+    "must": ["Build the canonical structure from the verified union of facts", "Bring every edition to identical structure and report the repair", "Run the checker with --parity --require-flowchart over the primary and all translations"],
+    "must_not": ["Keep an edition-specific section", "Update only the facts touched by the diff in the divergent edition and call the set synchronized", "Claim parity proves translation accuracy"]
+  },
+  {
+    "id": "net-reverted-changes",
+    "fixture": "Feature committed after baseline then reverted in working tree",
+    "conversation": [{"role": "user", "content": "更新 README，版本不变"}],
+    "must": ["Use net current-state evidence to avoid describing reverted behavior"],
+    "must_not": ["Document a feature that no longer exists because a commit message mentions it"]
+  },
+  {
+    "id": "nested-and-ignored-translations",
+    "fixture": "README.md, assets/README-zh.md, README.ja.md, docs/ko/README.md under ignored docs/, README-fr.md",
+    "conversation": [{"role": "user", "content": "更新文档到 1.5.0"}],
+    "must": ["Inventory and synchronize all five first-party language editions", "Use per-file relative links and translated anchors"],
+    "must_not": ["Stop after English and Chinese", "Exclude ignored first-party translations silently", "Create duplicate language files"]
+  },
+  {
+    "id": "monorepo-families",
+    "fixture": "Root EN/ZH overview, package cli EN/JA guides, unrelated library README and distinct package versions",
+    "conversation": [{"role": "user", "content": "更新 CLI 文档，CLI 版本改为 0.8.0"}],
+    "must": ["Identify CLI family and all its language editions", "Update root overview only when CLI facts there are affected", "Preserve unrelated package versions"],
+    "must_not": ["Replace all numeric versions with 0.8.0", "Treat every package README as a root translation"]
+  },
+  {
+    "id": "manual-and-local-edits",
+    "fixture": "Unmarked README with custom layout, managed region with explicit manual block, pre-existing staged translator edits",
+    "conversation": [{"role": "user", "content": "同步增量，版本不变"}],
+    "must": ["Apply narrow factual changes and preserve unrelated prose/layout/local edits", "Ask focused permission if a required correction is inside a manual block"],
+    "must_not": ["Regenerate the whole document", "Stage/revert user changes", "Claim complete sync if a protected edition remains unresolved"]
+  },
+  {
+    "id": "conflict-and-invalid-baseline",
+    "fixture": "Missing user baseline or unmerged README/code",
+    "conversation": [{"role": "user", "content": "从不存在的版本标签开始更新 README，版本不变"}],
+    "must": ["Report the invalid baseline/conflict and request resolution"],
+    "must_not": ["Silently use HEAD~1", "Resolve Git conflicts or fetch tags automatically"]
+  },
+  {
+    "id": "no-git-fallback",
+    "fixture": "Project has no Git history or Git command permission denied",
+    "conversation": [{"role": "user", "content": "更新 README，版本不变"}],
+    "must": ["Explain unavailable Git evidence and request supplied diff or authorized current-state audit"],
+    "must_not": ["Initialize/fetch the target repo", "Bypass command denial through a script/subagent", "Claim Git increment analysis occurred"]
+  },
+  {
+    "id": "no-op-and-version-only",
+    "fixture": "No public documentation delta",
+    "conversation": [{"role": "user", "content": "更新 README，版本不变"}],
+    "must": ["Check all editions and return verified no-op"],
+    "must_not": ["Manufacture feature edits or a changelog"]
+  },
+  {
+    "id": "unpublished-dynamic-version",
+    "fixture": "Dynamic registry badge and pinned install command; requested version not known to be published",
+    "conversation": [{"role": "user", "content": "文档更新到 3.0.0-rc.1"}],
+    "must": ["Preserve truthful dynamic endpoints", "Explain unresolved publication/version-pin assumptions and resolve before claiming completion"],
+    "must_not": ["Fake registry state", "Invent a release download URL", "Change runtime or API protocol version because release version changed"]
+  },
+  {
+    "id": "context-loss-version-decision",
+    "conversation": [{"role": "user", "content": "继续更新，之前版本已经选过，但现在找不到原始确认"}],
+    "must": ["Recover actual user decision or reconfirm version"],
+    "must_not": ["Infer acceptance from agent summary or manifest"]
+  },
+  {
+    "id": "main-side-coordination",
+    "conversation": [{"role": "user", "content": "更新 README 并重新设计成展示型，英文，版本 2.0.0"}],
+    "must": ["Use side skill for Git/version/all-language scope and main skill for design", "Ask only unresolved redesign preferences once"],
+    "must_not": ["Ask supplied language/version again", "Invoke mutually recursive skill workflows"]
+  }
+]

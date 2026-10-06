@@ -1,19 +1,20 @@
 ---
-name: general-readme-skill
-description: >
-  Generate, redesign, or safely update evidence-based README files for apps,
-  libraries, CLIs, monorepos, and agent skills. This skill should be used for
-  /readme, "generate readme", "improve readme", "write readme", "帮我写 README",
-  "美化 README", or "更新README". Confirm reader and visual preferences before
-  generation; prioritize runnable onboarding, honest claims, and readable design.
+name: readme-write
+description: 'Generate or redesign evidence-based README files for apps, libraries, CLIs, monorepos, and agent skills. This skill should be used for /readme-write, /readme, generate readme, write readme, improve readme, 帮我写 README, 美化 README, README を書いて, README 작성해 줘, напиши README, or their equivalents in any language. Confirm reader and visual preferences before generation; every README includes a source-backed flowchart, and every language edition keeps identical content apart from the language. Git-driven updates are routed to the companion readme-update skill.'
 version: 2.0.0
 tags: documentation, readme, preferences, evidence, design
 ---
 
-# General README Skill
+# README Write Skill
 
 Create README files that answer: **What is this? Is it for me? How do I get a first result? Where do I go next?**
 Prefer a short, useful document over an exhaustive template. Treat beauty as hierarchy, useful visuals, and restraint—not mandatory HTML or more badges.
+
+## Update routing (before the creation gate)
+
+For requests to synchronize existing READMEs with code/Git changes ("update readme", "更新 README", "同步文档"), load the companion `readme-update` skill first. In this source repository, its entry is `side-skills/readme-update-skill/SKILL.md` (the directory name is historical; the skill name is `readme-update`); in an installation, resolve it through the host registry or a sibling skill directory such as `readme-update/`. For the documented Copilot adapter, load `.github/copilot-instructions/side-skills/readme-update-skill/SKILL.md`; for Cursor, load `.cursor/rules/side-skills/readme-update-skill/SKILL.md`. Keep the updater's own references relative to its entry point. The side skill owns read-only Git inspection, the mandatory target-version question (including unchanged), placement of each change at its natural position (never blindly appended at the beginning or end), flowchart maintenance, and complete existing language-family parity. Do not apply the creation questionnaire to a maintenance-only update: preserve the existing design and make narrow evidence-based changes after version acceptance.
+
+Use this main skill's content/design/validation references as support, not by recursively restarting its entire workflow. If creation or redesign is requested as well, combine unresolved design choices and the version question once. If the side skill is unavailable, report the missing companion and follow these minimum safeguards: ask for an exact version or explicit unchanged choice before editing, inspect all local Git change layers without state changes, and inventory/synchronize every existing language edition. Never silently perform an English-only update. Read-only reviews and specifically scoped link/typo repairs remain exempt. The gates below apply to creation, redesign and updates not governed by this maintenance routing.
 
 ## Non-negotiable entry gate
 
@@ -31,11 +32,16 @@ A request such as "generate a beautiful README" or `/readme` is NOT explicit del
 
 Read `references/preference-gate.md` for the question, settings contract, partial-answer rules, and recovery after context loss. Keep the resolved record in conversation state; do not create a preferences file unless requested. Check it again immediately before writing. A validator can check the record's consistency, but cannot prove the user actually consented.
 
+## Output invariants (every README, every language)
+
+1. **Always include a flowchart.** Every README this skill writes contains at least one flowchart of the project's real primary flow: request/data flow for applications and services, command pipeline for CLIs, public-API call flow for libraries, package interaction or startup order for monorepos, and installation → invocation → interaction for skills, plugins and docs-only projects. Use a Mermaid `flowchart`/`graph` for GitHub rendering; for the `portable` renderer use a fenced `text` flowchart with arrows. Base nodes and edges on the evidence ledger; when component relationships cannot be proven, draw the verified reader workflow (install → configure → run → result) from the Quick Start. An image/visual preference of "none" removes images, not this flowchart. Place it in its natural section (Workflow, Architecture or Usage), not as an appendix.
+2. **All language editions are identical except the language.** Primary and every secondary README share the same section order, heading levels, tables (rows and columns), list items, code blocks and commands, flowchart nodes and edges (only labels are translated), links and targets, images, badges and HTML structure, managed-region IDs and facts. Never add, drop or reorder content in one edition only; write one canonical structure and render it into each language. Read `references/language-guide.md` for the parity contract.
+
 ## Workflow
 
 **Confirm → Inspect → Plan → Compose → Check → Deliver**
 
-Use native read/search/edit tools. Keep the core workflow dependency-free; Python 3.9+ is optional for the bundled offline checker. Resolve references relative to the installed `SKILL.md`, never relative to the target repository by assumption. For Copilot installed as `.github/copilot-instructions.md`, resolve companions under `.github/copilot-instructions/references/` and `.github/copilot-instructions/scripts/`. For Cursor's `.cursor/rules/general-readme.mdc`, resolve companions under `.cursor/rules/references/` and `.cursor/rules/scripts/`. Prefer these explicit bases over workspace-relative guesses; stop and name missing required resources if they cannot be found.
+Use native read/search/edit tools. Keep the core workflow dependency-free; Python 3.9+ is optional for the bundled offline checker. Resolve references relative to the installed `SKILL.md`, never relative to the target repository by assumption. For Copilot installed as `.github/copilot-instructions.md`, resolve companions under `.github/copilot-instructions/references/` and `.github/copilot-instructions/scripts/`. For Cursor's `.cursor/rules/readme-write.mdc`, resolve companions under `.cursor/rules/references/` and `.cursor/rules/scripts/`. Prefer these explicit bases over workspace-relative guesses; stop and name missing required resources if they cannot be found.
 
 ### 1. Confirm preferences and scope
 
@@ -49,7 +55,7 @@ Resolve these settings through explicit choices or authorized recommendations:
 | Depth | short / standard / detailed | standard |
 | Tone | professional / minimal / energetic | professional |
 | Badge style | none / flat / flat-square / for-the-badge | flat; at most 4 identity badges |
-| Visuals | none / existing / diagrams | existing; use only relevant verified assets |
+| Images / extra diagrams | none / existing / diagrams | existing; use only relevant verified assets (the required flowchart is always included) |
 | Update mode | preserve / rewrite | preserve |
 | Renderer | github / portable | github |
 | Emoji | true / false | false; use only when explicitly requested |
@@ -103,7 +109,7 @@ Apply the confirmed layout from the start; **do not generate mandatory HTML and 
 - **showcase:** optional centered HTML Hero, at most 4 badges, 1–2 plain-text action links, one real visual; keep the body in Markdown.
 - **portable:** Markdown only; prefer text explanations over GitHub-only HTML/Mermaid features.
 
-Do not add badges for the AI tool generating the document. Add platform badges only when the target project actually supports those integrations. Never assert CI passing, coverage, download counts, benchmarks, or package publication without evidence. Keep visuals optional; no diagram is better than an invented diagram. Prefer 3–8 nodes with source-backed edges, or link a detailed existing diagram. Preserve code fences, raw-source readability, descriptive alt text, and narrow-screen readability.
+Do not add badges for the AI tool generating the document. Add platform badges only when the target project actually supports those integrations. Never assert CI passing, coverage, download counts, benchmarks, or package publication without evidence. Images stay optional, but the flowchart is mandatory and must never be invented: use 3–8 nodes with source-backed edges (or the verified reader workflow when relationships are unproven) and the diagram rules in `references/diagram-templates.md`. Preserve code fences, raw-source readability, descriptive alt text, and narrow-screen readability.
 
 Use only existing, relevant images unless creation is explicitly requested. Do not generate a fictional product screenshot. Compute every local link from the destination README's directory. Translate headings and recompute fragment links; never hardcode `#quick-start` for all languages.
 
@@ -112,13 +118,14 @@ Use only existing, relevant images unless creation is explicitly requested. Do n
 Read `references/quality-checks.md`. Check preferences again, then verify:
 
 - A new reader can identify purpose, install/start, and get a first result without guessing.
+- Every README contains a valid, source-backed flowchart, and every language edition has the same sections, tables, code blocks, flowchart structure, links and images as the primary.
 - Every command, runtime minimum, API shape, configuration default, and diagram relationship has evidence.
 - Shell command blocks have coherent working-directory transitions and required setup. Use the repository's declared package manager/lockfile; do not assume npm, Docker, a published package, or a localhost port.
 - Local paths, image references, heading fragments, language links, fences, managed/manual marker pairs, and image alt text are correct.
 - No unresolved template tokens, secrets, unsupported claims, padding sections, duplicate Hero, or excessive badge rows remain.
 - Existing manual content is unchanged; generated-region updates do not add duplicate sections on a second run.
 
-Optionally run the skill's **read-only** `scripts/check_readme.py` with an explicit project root and README paths. Read its interface first. Use `--preferences` to check a user-authorized record and `--json` for machine-readable results. This checker performs no network access and executes no project code. Do not create a state file solely to enable it. When Python/tools are unavailable, perform the checklist manually and say so.
+Run the skill's **read-only** `scripts/check_readme.py` whenever Python is available, with an explicit project root and every README path (primary first). Read its interface first. Always pass `--require-flowchart`; pass `--parity` when more than one language edition exists. Use `--preferences` to check a user-authorized record and `--json` for machine-readable results. A parity pass proves structural identity only, not translation accuracy. This checker performs no network access and executes no project code. Do not create a state file solely to enable it. When Python/tools are unavailable, perform the checklist manually and say so.
 
 Fix errors in generated content; report pre-existing/manual problems rather than silently changing their scope. Distinguish static checks from command execution, Mermaid parser validation, and actual GitHub/browser rendering. Never claim those latter checks were performed when they were not. Do not run project commands unless separately requested/authorized.
 
@@ -126,7 +133,7 @@ Fix errors in generated content; report pre-existing/manual problems rather than
 
 Write only the agreed README files and explicitly approved supporting assets. Use targeted edits for updates. For new documents, wrap each generated section in paired markers from `references/evidence-and-updates.md`; do not add config, reports, or tracking files to the target repository by default.
 
-Use UTF-8, LF, a final newline, and clean blank lines. Write primary `README.md` and only requested translations, preserving existing translation locations when appropriate. Use identical managed-region IDs across translations.
+Use UTF-8, LF, a final newline, and clean blank lines. Write primary `README.md` and only requested translations, preserving existing translation locations when appropriate. Write all editions in the same pass from one canonical structure; use identical managed-region IDs across translations.
 
 Return a short summary containing:
 1. Changed paths and resolved layout/language.
@@ -147,7 +154,7 @@ Do not end with only "generated successfully, review manually". Do not claim gua
 | `references/quality-checks.md` | Pre-delivery checklist and checker limits |
 | `references/tone-profiles.md` | Applying the selected voice |
 | `references/badge-styles.md`, `references/badges.md` | Only relevant badges |
-| `references/diagram-templates.md` | Only evidence-backed diagrams |
-| `references/language-guide.md` | Requested translations |
+| `references/diagram-templates.md` | The mandatory flowchart and any extra evidence-backed diagrams |
+| `references/language-guide.md` | Language parity contract and translations |
 | `scripts/check_readme.py` | Optional offline static validation |
 | `tests/behavior-cases.json` | Host-agent evaluation scenarios; not a runtime dependency |
